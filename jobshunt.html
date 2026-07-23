@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>JobsHunt — Job Marketplace · Case Study</title>
+<link rel="stylesheet" href="css/main.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── JobsHunt colour overrides ── */
+:root {
+  --cyan:        #818CF8;
+  --cyan-deep:   #4338CA;
+  --violet:      #6366F1;
+  --violet-2:    #A5B4FC;
+  --grad:        linear-gradient(100deg, #4338CA, #6366F1);
+  --grad-soft:   linear-gradient(100deg, rgba(67,56,202,.10), rgba(99,102,241,.10));
+  --glow-cyan:   0 30px 70px -22px rgba(99,102,241,.38);
+  --glow-violet: 0 30px 70px -20px rgba(67,56,202,.38);
+  --bg:   #F8F7FF;
+  --bg-3: #EEF2FF;
+  --shadow: 0 26px 60px -28px rgba(30,27,75,.22);
+}
+
+/* Dark hero */
+.hero {
+  background: #1E1B4B;
+  color: #fff;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(60% 50% at 80% 10%, rgba(99,102,241,.35), transparent 60%),
+    radial-gradient(50% 40% at 10% 90%, rgba(67,56,202,.25), transparent 60%);
+  pointer-events: none;
+}
+.hero__tag { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.14); color: #A5B4FC; }
+.hero__tag .live { background: #818CF8; box-shadow: 0 0 0 0 rgba(129,140,248,.6); }
+.hero__title { color: #fff; }
+.hero__title .alt { background: linear-gradient(95deg, #818CF8, #C7D2FE); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero__lead { color: rgba(255,255,255,.65); }
+.hero__lead strong { color: #fff; }
+.hero__meta .k { color: rgba(255,255,255,.38); }
+.hero__meta .v { color: rgba(255,255,255,.85); }
+.hero__chip { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.12); color: #fff; backdrop-filter: blur(12px); }
+.scroll-cue { color: rgba(255,255,255,.38); }
+
+.bg-fx {
+  background:
+    radial-gradient(60% 50% at 80% 0%, rgba(99,102,241,.10), transparent 60%),
+    radial-gradient(50% 40% at 5% 100%, rgba(67,56,202,.08), transparent 60%),
+    var(--bg);
+}
+.progress { background: var(--grad); box-shadow: 0 1px 10px rgba(99,102,241,.5); }
+.hero__orb.a { background: radial-gradient(circle, rgba(99,102,241,.30), transparent 60%); }
+.hero__orb.b { background: radial-gradient(circle, rgba(67,56,202,.20), transparent 60%); }
+.hero__orb.c { background: radial-gradient(circle, rgba(129,140,248,.15), transparent 60%); }
+
+.hero__screen { aspect-ratio: 9/18; max-width: 240px; margin-inline: auto; }
+.hero__screen image-slot { width:100%; height:100%; display:block; }
+.goal__media { aspect-ratio: 9/16; max-width: 210px; margin: 0 auto; }
+.goal__media image-slot { width:100%; height:100%; display:block; }
+
+.cmp__col.self { border-color:rgba(99,102,241,.4); background:linear-gradient(180deg,rgba(67,56,202,.07),rgba(99,102,241,.04)); box-shadow:var(--glow-violet); }
+.cmp__badge { background:rgba(99,102,241,.12); color:var(--cyan-deep); }
+.card .card__icon.cyan   { background:rgba(99,102,241,.12); color:var(--cyan-deep); }
+.card .card__icon.violet { background:rgba(67,56,202,.12); color:var(--violet); }
+.stat__fill { background:var(--grad); box-shadow:0 0 14px rgba(99,102,241,.4); }
+
+/* sticky notes */
+.notes { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+.note  { padding:26px 24px; border-radius:6px; font-size:14.5px; line-height:1.6; color:#2a2840;
+  box-shadow:0 18px 36px -22px rgba(30,27,75,.30); transform:rotate(var(--rot,0deg)); transition:transform .35s var(--ease); }
+.note:hover { transform:rotate(0) translateY(-6px); }
+
+/* info board */
+.info-board { background:#1E1B4B; border-radius:var(--r-lg); padding:clamp(26px,4vw,46px); }
+.info-board h3 { color:#fff; font-size:24px; margin-bottom:30px; }
+.info-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:22px; }
+.info-note { padding:24px; border-radius:6px; font-size:14.5px; line-height:1.6; color:#2a2840; box-shadow:0 16px 30px -20px rgba(0,0,0,.4); }
+
+/* colour spec */
+.colorspec { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+.colorspec .chip { height:140px; border-radius:var(--r-md); border:1px solid var(--line); }
+.colorspec dl { margin-top:16px; display:grid; grid-template-columns:auto 1fr; gap:7px 16px; font-size:13.5px; }
+.colorspec dt { color:var(--faint); }
+.colorspec dd { color:var(--ink); font-weight:500; }
+
+/* buttons */
+.btnrow { display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:8px; }
+.btnrow .lbl { width:90px; color:var(--faint); font-size:13px; }
+.b  { border:none; border-radius:100px; font-weight:600; cursor:pointer; color:#fff; background:var(--grad); font-family:'Space Grotesk',sans-serif; }
+.b.lg { padding:15px 40px; font-size:15px; }
+.b.md { padding:13px 30px; font-size:14px; }
+.b.sm { padding:11px 22px; font-size:13px; }
+.b.sec { background:#fff; color:var(--cyan-deep); border:1.5px solid var(--cyan-deep); }
+
+.hifi-media { border-radius:var(--r-lg); overflow:hidden; }
+/* affinity mapping v2 */
+.aff-v2 { display:flex; flex-direction:column; gap:32px; }
+.aff-block { border-radius:20px; overflow:hidden; box-shadow:0 8px 48px -14px rgba(30,27,75,.18); }
+.aff-block-hd { display:flex; align-items:stretch; min-height:72px; }
+.aff-block-num { width:82px; display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk',sans-serif; font-size:38px; font-weight:800; color:rgba(255,255,255,.22); flex-shrink:0; }
+.aff-block-info { padding:14px 26px; display:flex; align-items:center; gap:14px; flex:1; border-left:1px solid rgba(255,255,255,.15); }
+.aff-block-ico { width:40px; height:40px; background:rgba(255,255,255,.18); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.aff-block-lbl { font-family:'Space Grotesk',sans-serif; font-size:19px; font-weight:700; color:#fff; letter-spacing:-.015em; }
+.aff-block-body { padding:24px; display:grid; grid-template-columns:repeat(3,1fr); gap:16px; background:#fff; }
+.aff-note-v2 { padding:20px 18px; border-radius:12px; font-size:13.5px; line-height:1.68; color:#2a2840; box-shadow:0 4px 18px -8px rgba(0,0,0,.14),0 1px 3px rgba(0,0,0,.05); transition:transform .22s ease,box-shadow .22s ease; }
+.aff-note-v2:hover { transform:translateY(-5px) rotate(-0.4deg); box-shadow:0 14px 32px -10px rgba(0,0,0,.2); }
+/* user journey */
+.uj-outer { background:#1E1B4B; padding:clamp(56px,8vw,96px) clamp(20px,5vw,84px); }
+.uj-inner { max-width:1200px; margin:0 auto; }
+.uj-title { font-family:'Space Grotesk',sans-serif; font-size:clamp(32px,4.5vw,52px); font-weight:700; color:#fff; text-align:center; margin-bottom:48px; letter-spacing:-.02em; }
+.uj-table { width:100%; border-collapse:collapse; color:#d8d8d8; }
+.uj-table th, .uj-table td { border:1px solid rgba(255,255,255,.14); padding:18px 16px; font-size:13px; line-height:1.65; vertical-align:top; }
+.uj-table thead th { color:rgba(255,255,255,.55); font-weight:400; font-size:12.5px; text-align:center; }
+.uj-table .uj-row-label strong { display:block; font-weight:700; color:#fff; font-size:13px; }
+.uj-table .uj-row-label small { color:rgba(255,255,255,.4); font-size:11px; display:block; margin-top:3px; }
+.uj-table .uj-emoji { text-align:center; font-size:32px; padding-top:14px; padding-bottom:14px; }
+@media(max-width:900px){
+  .aff-block-body { grid-template-columns:repeat(2,1fr); }
+  .aff-block-num { width:54px; font-size:26px; }
+  .uj-outer { padding:40px 16px; }
+}
+
+.back-home { position:fixed; bottom:24px; left:clamp(20px,5vw,84px); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:#fff; text-decoration:none; z-index:200; padding:10px 18px; background:linear-gradient(100deg,#4338CA,#6366F1); border-radius:100px; box-shadow:0 4px 16px rgba(67,56,202,.28); transition:opacity .2s; }
+.back-home:hover { opacity:.85; }
+
+@media(max-width:760px){
+  .notes { grid-template-columns:1fr; }
+  .colorspec { grid-template-columns:1fr; }
+}
+body, body *:not(.x) { font-family:'Poppins',system-ui,sans-serif !important; }
+</style>
+</head>
+<body>
+
+<script>
+(function(){ var re=/ResizeObserver loop/;
+  window.addEventListener('error',function(e){ if(e&&e.message&&re.test(e.message)){ e.stopImmediatePropagation(); e.preventDefault(); } }); }());
+</script>
+
+<template id="__bundler_thumbnail" data-bg-color="#1E1B4B">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#1E1B4B"/>
+    <rect x="470" y="270" width="260" height="260" rx="40" fill="url(#g)"/>
+    <text x="600" y="425" font-family="sans-serif" font-size="100" font-weight="700" fill="#fff" text-anchor="middle">J</text>
+    <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4338CA"/><stop offset="1" stop-color="#6366F1"/></linearGradient></defs>
+  </svg>
+</template>
+
+<div class="bg-fx"></div>
+<div class="bg-grid"></div>
+<div class="progress" id="progress"></div>
+
+<!-- ===================== HERO ===================== -->
+<header class="hero" data-screen-label="Hero" style="position:relative;overflow:hidden;">
+  <div class="hero__orb a" style="width:700px;height:700px;top:-200px;right:-150px;position:absolute;pointer-events:none;"></div>
+  <div class="hero__orb b" style="width:440px;height:440px;bottom:-100px;left:-80px;position:absolute;pointer-events:none;"></div>
+  <div class="hero__orb c" style="width:280px;height:280px;top:38%;left:18%;position:absolute;pointer-events:none;"></div>
+
+  <div class="hero__body">
+    <div class="hero__col">
+      <span class="hero__tag" data-reveal><span class="live"></span> JOBSHUNT — JOB MARKETPLACE</span>
+      <h1 class="hero__title" data-reveal data-delay="1">Jobs<span class="alt">Hunt</span></h1>
+      <p class="hero__lead" data-reveal data-delay="2">A mobile job marketplace that helps users <strong>discover relevant opportunities, apply in seconds, and track every application</strong> — all in one clean, focused experience.</p>
+      <div class="hero__meta" data-reveal data-delay="3">
+        <div class="item"><div class="k">Role</div><div class="v">UI/UX Designer</div></div>
+        <div class="item"><div class="k">Type</div><div class="v">Personal Project</div></div>
+        <div class="item"><div class="k">Year</div><div class="v">2024</div></div>
+        <div class="item"><div class="k">Platform</div><div class="v">Mobile · iOS &amp; Android</div></div>
+      </div>
+    </div>
+
+    <div class="hero__art" data-reveal data-delay="2">
+      <div class="hero__stage" id="heroStage">
+        <div class="hero__screen">
+          <img src="img/Landing Page.png" alt="JobsHunt hero screen" style="width:100%;height:100%;object-fit:cover;display:block;">
+        </div>
+        <div class="hero__chip one">
+          <span class="ic" style="background:rgba(129,140,248,.2);color:#818CF8">💼</span>
+          <div style="color:#fff">10k+<small style="color:#fff">Active Listings</small></div>
+        </div>
+        <div class="hero__chip two">
+          <span class="ic" style="background:rgba(99,102,241,.2);color:#6366F1">★</span>
+          <div style="color:#fff">4.7<small style="color:#fff">App Store Rating</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-cue">Scroll<span class="bar"></span></div>
+</header>
+
+<!-- ===================== TICKER: Background ===================== -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker__track" style="--dur:30s">
+    <span class="on">Background</span><span>Information</span><span class="on">Background</span><span>Information</span><span class="on">Background</span><span>Information</span><span class="on">Background</span><span>Information</span>
+  </div>
+</div>
+
+<!-- ===================== BACKGROUND ===================== -->
+<section class="section" id="overview">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="kicker">01 — Background</span>
+      <h2 class="h-section">Background <span class="grad">Information</span></h2>
+    </div>
+    <div class="prose">
+      <p data-reveal>Job hunting in Indonesia is fragmented and exhausting. Seekers toggle between LinkedIn, Glints, Jobstreet, and WhatsApp groups — each with different formats, different quality signals, and no unified application tracking. Meanwhile, mobile-first users are forced to wrestle with desktop-optimised flows on small screens.</p>
+      <p data-reveal>JobsHunt was designed as a clean, mobile-first alternative: a focused job marketplace where users can discover relevant roles by skill or title, apply in a single tap using a pre-built profile, and track every application status in one place — no spreadsheets, no forgotten follow-ups.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== GOAL ===================== -->
+<section class="section section--tight">
+  <div class="wrap goal">
+    <div data-reveal>
+      <div class="hero__screen goal__media" style="transform:none;box-shadow:var(--shadow),var(--glow-cyan);">
+        <img src="img/Landing Page.png" alt="JobsHunt home screen" style="width:100%;height:100%;object-fit:cover;display:block;">
+      </div>
+    </div>
+    <div data-reveal data-delay="1">
+      <span class="kicker">Goal</span>
+      <p class="goal__stmt">Create a job discovery app where finding and applying for a <b>relevant role</b> takes under two minutes — with smart filtering, one-tap apply, and a clear application dashboard.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== DESIGN PROCESS ===================== -->
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="kicker">Process</span>
+      <h2 class="h-section">Design Process</h2>
+    </div>
+    <div class="steps">
+      <div class="step" data-reveal><div class="step__n">01</div><span class="step__ic">🗣️</span><div class="step__t">Empathize</div><div class="step__d">Interviewed active job seekers to understand how they currently search and apply.</div></div>
+      <div class="step" data-reveal data-delay="1"><div class="step__n">02</div><span class="step__ic">🎯</span><div class="step__t">Define</div><div class="step__d">Synthesised pain points into a clear problem statement and design principles.</div></div>
+      <div class="step" data-reveal data-delay="2"><div class="step__n">03</div><span class="step__ic">💡</span><div class="step__t">Ideate</div><div class="step__d">Explored solutions through HMW prompts and rapid sketching.</div></div>
+      <div class="step" data-reveal data-delay="3"><div class="step__n">04</div><span class="step__ic">✏️</span><div class="step__t">Prototype</div><div class="step__d">Built lo-fi wireframes and a hi-fi interactive prototype in Figma.</div></div>
+      <div class="step" data-reveal data-delay="4"><div class="step__n">05</div><span class="step__ic">🧪</span><div class="step__t">Test</div><div class="step__d">Moderated usability sessions with 5 job seekers — iterated on findings.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== METHODOLOGY ===================== -->
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="kicker">Methodology</span>
+      <h2 class="h-section">Methodology</h2>
+    </div>
+    <div class="grid g-2">
+      <div class="card" data-reveal><div class="card__icon cyan">🗣️</div><h3>User Interviews</h3><p>5 in-depth sessions with active job seekers aged 20–32, covering their full job-hunting journey across platforms.</p></div>
+      <div class="card" data-reveal data-delay="1"><div class="card__icon violet">📊</div><h3>Competitive Analysis</h3><p>Evaluated LinkedIn, Glints, and JobStreet for feature coverage, mobile UX quality, and application flow efficiency.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== WHAT DO USERS THINK ===================== -->
+<section class="section">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="kicker">Voice of the user</span>
+      <h2 class="h-section">What do users<br/><span class="grad">actually think?</span></h2>
+      <p class="h-sub">To understand how job seekers search and apply for work, I conducted a survey via Google Forms with a few participants with 6 questions.</p>
+    </div>
+    <!-- Survey question sticky notes -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:44px" data-reveal>
+      <div class="note" style="background:#2b2950;color:#fff;--rot:0deg;border-radius:8px;font-size:13px;line-height:1.55">Have you ever looked for a job through an app or website?</div>
+      <div class="note" style="background:#FFB3C6;--rot:0deg;border-radius:8px;font-size:13px;line-height:1.55">Have you ever applied for a job through an online platform?</div>
+      <div class="note" style="background:#A8F0B0;--rot:0deg;border-radius:8px;font-size:13px;line-height:1.55">Did you find it difficult to track your applications after applying?</div>
+      <div class="note" style="background:#C7BFFF;--rot:0deg;border-radius:8px;font-size:13px;line-height:1.55">Do you need information about the company before applying for a job?</div>
+      <div class="note" style="background:#A5B4FC;--rot:0deg;border-radius:8px;font-size:13px;line-height:1.55">How important is salary information when choosing a job to apply for?</div>
+      <div class="note" style="background:#FFE5A0;--rot:0deg;border-radius:8px;font-size:13px;line-height:1.55">Have you ever used job platforms? (eg: LinkedIn, JobStreet, Glints, or other job apps)</div>
+      <div class="note" style="background:#C7D2FE;--rot:0deg;border-radius:8px;font-size:13px;line-height:1.55">Do you prefer to apply for jobs online or come directly to the company?</div>
+    </div>
+    <!-- Stats -->
+    <div style="display:flex;flex-direction:column;gap:20px;margin-bottom:52px" data-reveal>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:7px"><span>Users find it difficult to track their job applications.</span><strong style="color:var(--ink)">70%</strong></div>
+        <div style="height:7px;background:rgba(99,102,241,.14);border-radius:100px;overflow:hidden"><div style="width:70%;height:100%;background:var(--grad);border-radius:100px"></div></div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:7px"><span>Users apply for jobs through online platforms.</span><strong style="color:var(--ink)">88%</strong></div>
+        <div style="height:7px;background:rgba(99,102,241,.14);border-radius:100px;overflow:hidden"><div style="width:88%;height:100%;background:var(--grad);border-radius:100px"></div></div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:7px"><span>Users check company background before applying.</span><strong style="color:var(--ink)">92%</strong></div>
+        <div style="height:7px;background:rgba(99,102,241,.14);border-radius:100px;overflow:hidden"><div style="width:92%;height:100%;background:var(--grad);border-radius:100px"></div></div>
+      </div>
+    </div>
+    <!-- Interviews dark board -->
+    <div class="info-board" data-reveal>
+      <h3>Interviews</h3>
+      <p style="color:rgba(255,255,255,.55);font-size:14px;line-height:1.65;margin-bottom:28px">In order to gain qualitative data about users' goals, needs, frustrations and motivations, I conducted user interviews with 5 participants according to the demographics of the market research.</p>
+      <div class="info-grid">
+        <div class="info-note" style="background:#2b2950;color:rgba(255,255,255,.8);font-size:13.5px">How do you usually search for job vacancies?</div>
+        <div class="info-note" style="background:#2b2950;color:rgba(255,255,255,.8);font-size:13.5px">Have you ever applied for a job through an online platform?</div>
+        <div class="info-note" style="background:#2b2950;color:rgba(255,255,255,.8);font-size:13.5px">What information do you need before applying for a job?</div>
+        <div class="info-note" style="background:#2b2950;color:rgba(255,255,255,.8);font-size:13.5px">What job platform do you usually use when looking for work?</div>
+        <div class="info-note" style="background:#2b2950;color:rgba(255,255,255,.8);font-size:13.5px">Can the currently available job platforms help you track your applications?</div>
+        <div class="info-note" style="background:#2b2950;color:rgba(255,255,255,.8);font-size:13.5px">What do you think about current job platforms in terms of the application process?</div>
+      </div>
+      <p style="font-size:11px;color:rgba(255,255,255,.3);margin-top:22px;letter-spacing:.08em;text-transform:uppercase">Answer from User</p>
+    </div>
+    <!-- Answer cards -->
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:24px" data-reveal>
+      <div style="background:#E8F5A3;padding:20px 16px;border-radius:8px;font-size:12.5px;line-height:1.65;color:#2a3a28">I usually look through LinkedIn and Glints, but the apps are heavy and full of distractions. I need schedules, salary info, company details, and a way to know my application status.</div>
+      <div style="background:#C7BFFF;padding:20px 16px;border-radius:8px;font-size:12.5px;line-height:1.65;color:#2a2842">I apply online because it's faster. But I have to fill in the same information every time. It would help if my profile could be saved and reused for every application.</div>
+      <div style="background:#FFB3C6;padding:20px 16px;border-radius:8px;font-size:12.5px;line-height:1.65;color:#3a1a28">I need to know the company name, location, salary range, and job requirements before applying. Trust matters — I want to be sure the company is real.</div>
+      <div style="background:#A5C8FC;padding:20px 16px;border-radius:8px;font-size:12.5px;line-height:1.65;color:#0a2238">I usually apply directly through apps, sometimes through company websites. I need an app that is easy to use and lets me apply quickly without too many steps.</div>
+      <div style="background:#FFD4A3;padding:20px 16px;border-radius:8px;font-size:12.5px;line-height:1.65;color:#3a2a10">I want to know when there is an update on my application. The experience is good when I can see whether my application was viewed or rejected.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== GAIN INSIGHT ===================== -->
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="kicker">Gain Insight</span>
+      <h2 class="h-section">Gain <span class="grad">Insight</span></h2>
+      <p class="h-sub">Key insights gathered from user research to guide design decisions.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:28px" data-reveal>
+      <div style="background:#E8F576;border-radius:16px;padding:40px 34px;box-shadow:0 8px 32px -16px rgba(30,27,75,.18)">
+        <h3 style="font-size:20px;font-weight:700;color:#2a2840;margin:0 0 18px">Easy Apply</h3>
+        <p style="font-size:15px;line-height:1.75;color:#3a3858;margin:0">Users tend to want it easy to apply for jobs because their own positions are still a lot of students and fresh-graduates with minimal experience.</p>
+      </div>
+      <div style="background:#E8F576;border-radius:16px;padding:40px 34px;box-shadow:0 8px 32px -16px rgba(30,27,75,.18)">
+        <h3 style="font-size:20px;font-weight:700;color:#2a2840;margin:0 0 18px">Job Categorization</h3>
+        <p style="font-size:15px;line-height:1.75;color:#3a3858;margin:0">Users tend to choose the type of work that is in accordance with their field or background.</p>
+      </div>
+      <div style="background:#E8F576;border-radius:16px;padding:40px 34px;box-shadow:0 8px 32px -16px rgba(30,27,75,.18)">
+        <h3 style="font-size:20px;font-weight:700;color:#2a2840;margin:0 0 18px">Money Oriented</h3>
+        <p style="font-size:15px;line-height:1.75;color:#3a3858;margin:0">When users choose a job, they usually see and choose a job based on the salary provided by the company.</p>
+      </div>
+      <div style="background:#E8F576;border-radius:16px;padding:40px 34px;box-shadow:0 8px 32px -16px rgba(30,27,75,.18)">
+        <h3 style="font-size:20px;font-weight:700;color:#2a2840;margin:0 0 18px">Location &amp; Distance Concerns</h3>
+        <p style="font-size:15px;line-height:1.75;color:#3a3858;margin:0">Users tend to think about the distance between their place of residence and their place of work when choosing jobs, especially part-time or internships.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== TICKER: Define ===================== -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker__track" style="--dur:26s">
+    <span class="on">Define</span><span>Define</span><span class="on">Define</span><span>Define</span><span class="on">Define</span><span>Define</span><span class="on">Define</span><span>Define</span>
+  </div>
+</div>
+
+<!-- ===================== COMPETITIVE ANALYSIS ===================== -->
+<section class="section" id="define">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="kicker">03 — Define</span>
+      <h2 class="h-section">Competitive Analysis</h2>
+      <p class="h-sub">Mapping the strengths and gaps of the leading platforms to find where JobsHunt can deliver more value.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-radius:20px;overflow:hidden;margin-top:8px" data-reveal>
+      <!-- LinkedIn -->
+      <div style="background:#B3EAF5;padding:44px 36px">
+        <div style="margin-bottom:32px">
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:26px;color:#0A66C2;letter-spacing:-.02em">Linked<span style="background:#0A66C2;color:#fff;padding:2px 7px;border-radius:4px;margin-left:1px">in</span></span>
+        </div>
+        <h4 style="font-size:17px;font-weight:600;color:#1a2840;margin:0 0 14px">Strength</h4>
+        <ul style="margin:0 0 36px;padding-left:18px;font-size:14px;line-height:1.85;color:#2a3850;display:flex;flex-direction:column;gap:4px">
+          <li>Easy to apply for jobs</li>
+          <li>Easy display and use of the application.</li>
+          <li>There is notification that the profile we have created matches the job position.</li>
+          <li>Can post several supporting files to apply for a job.</li>
+        </ul>
+        <h4 style="font-size:17px;font-weight:600;color:#1a2840;margin:0 0 14px">Weakness</h4>
+        <ul style="margin:0;padding-left:18px;font-size:14px;line-height:1.85;color:#2a3850;display:flex;flex-direction:column;gap:4px">
+          <li>There is no information such as job notifications that we have applied for.</li>
+          <li>Job postings don't show salary.</li>
+        </ul>
+      </div>
+      <!-- JobStreet -->
+      <div style="background:#FFF0A0;padding:44px 36px">
+        <div style="margin-bottom:32px">
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:22px;color:#1A3B5D;letter-spacing:-.02em">🔵 JobStreet</span><br><span style="font-size:12px;color:#888;font-weight:500;letter-spacing:.04em">by SEEK</span>
+        </div>
+        <h4 style="font-size:17px;font-weight:600;color:#1a2820;margin:0 0 14px">Strength</h4>
+        <ul style="margin:0 0 36px;padding-left:18px;font-size:14px;line-height:1.85;color:#2a3820;display:flex;flex-direction:column;gap:4px">
+          <li>Easy to apply for jobs.</li>
+          <li>There is a notification sentence that we have applied for the job.</li>
+        </ul>
+        <h4 style="font-size:17px;font-weight:600;color:#1a2820;margin:0 0 14px">Weakness</h4>
+        <ul style="margin:0;padding-left:18px;font-size:14px;line-height:1.85;color:#2a3820;display:flex;flex-direction:column;gap:4px">
+          <li>Requirements for the size of the CV that is too small.</li>
+          <li>Some job postings don't show salary.</li>
+          <li>There is no information such as job notifications that we have applied for.</li>
+        </ul>
+      </div>
+      <!-- glints -->
+      <div style="background:#AAEEC0;padding:44px 36px">
+        <div style="margin-bottom:32px;display:flex;align-items:center;gap:8px">
+          <svg width="28" height="28" viewBox="0 0 24 24"><polygon points="12 2 14.5 9 22 9 16 14 18 21 12 17 6 21 8 14 2 9 9.5 9" fill="#FF6B35"/></svg>
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:26px;color:#1a5c3a;letter-spacing:-.02em">glints</span>
+        </div>
+        <h4 style="font-size:17px;font-weight:600;color:#1a2820;margin:0 0 14px">Strength</h4>
+        <ul style="margin:0 0 36px;padding-left:18px;font-size:14px;line-height:1.85;color:#1a3820;display:flex;flex-direction:column;gap:4px">
+          <li>There is a notification regarding the process of applying for a job that we have applied for.</li>
+          <li>Can add several supporting files to apply for a job.</li>
+        </ul>
+        <h4 style="font-size:17px;font-weight:600;color:#1a2820;margin:0 0 14px">Weakness</h4>
+        <ul style="margin:0;padding-left:18px;font-size:14px;line-height:1.85;color:#1a3820;display:flex;flex-direction:column;gap:4px">
+          <li>Some job postings don't show salary.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== AFFINITY MAPPING ===================== -->
+<section class="section">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="kicker">Synthesis</span>
+      <h2 class="h-section">Affinity Mapping</h2>
+      <p class="h-sub">I wrote down all the responses and grouped them by topic. From these insights, I was able to determine the core user needs.</p>
+    </div>
+    <div class="aff-v2">
+
+      <!-- 01 Discovery & Relevance -->
+      <div class="aff-block" data-reveal>
+        <div class="aff-block-hd" style="background:linear-gradient(110deg,#4338CA,#6366F1)">
+          <div class="aff-block-num">01</div>
+          <div class="aff-block-info">
+            <div class="aff-block-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+            <span class="aff-block-lbl">Discovery &amp; Relevance</span>
+          </div>
+        </div>
+        <div class="aff-block-body">
+          <div class="aff-note-v2" style="background:#E0E7FF">Users want to see only relevant roles — not scroll through hundreds of mismatches.</div>
+          <div class="aff-note-v2" style="background:#FEF9C3">Skill-tag filtering is preferred over category browsing for junior seekers.</div>
+          <div class="aff-note-v2" style="background:#DCFCE7">Salary range should be shown before opening a listing — not buried inside.</div>
+        </div>
+      </div>
+
+      <!-- 02 Application Friction -->
+      <div class="aff-block" data-reveal>
+        <div class="aff-block-hd" style="background:linear-gradient(110deg,#6366F1,#818CF8)">
+          <div class="aff-block-num">02</div>
+          <div class="aff-block-info">
+            <div class="aff-block-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+            <span class="aff-block-lbl">Application Friction</span>
+          </div>
+        </div>
+        <div class="aff-block-body">
+          <div class="aff-note-v2" style="background:#FCE7F3">Re-entering the same profile data for each application is the top frustration.</div>
+          <div class="aff-note-v2" style="background:#E0E7FF">A single-tap apply from the listing card — not a multi-step form — is the ideal.</div>
+          <div class="aff-note-v2" style="background:#FEF9C3">Cover letter fields deter mobile applicants; optional is better than required.</div>
+        </div>
+      </div>
+
+      <!-- 03 Post-Apply Tracking -->
+      <div class="aff-block" data-reveal>
+        <div class="aff-block-hd" style="background:linear-gradient(110deg,#1E1B4B,#4338CA)">
+          <div class="aff-block-num">03</div>
+          <div class="aff-block-info">
+            <div class="aff-block-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+            <span class="aff-block-lbl">Post-Apply Tracking</span>
+          </div>
+        </div>
+        <div class="aff-block-body">
+          <div class="aff-note-v2" style="background:#DBEAFE">Users check apps daily to see if anything changed — and find no update.</div>
+          <div class="aff-note-v2" style="background:#DCFCE7">A simple status column (Sent / Viewed / Interview / Rejected) satisfies this need.</div>
+          <div class="aff-note-v2" style="background:#FCE7F3">Push notifications for status changes are strongly desired.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== USER JOURNEY ===================== -->
+<div class="uj-outer">
+  <div class="uj-inner">
+    <h2 class="uj-title">User Journey</h2>
+    <div style="overflow-x:auto">
+      <table class="uj-table">
+        <thead>
+          <tr>
+            <th style="text-align:left;width:120px">Journey</th>
+            <th>Awareness</th>
+            <th>Search</th>
+            <th>Evaluate</th>
+            <th>Apply</th>
+            <th>Track</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="uj-row-label"><strong>Action</strong><small>What does the user do?</small></td>
+            <td>User realizes they need a new job and decides to start searching for vacancies online.</td>
+            <td>Browses platforms and filters listings by role, location, and work model.</td>
+            <td>Reviews job details, company background, salary, and requirements before deciding.</td>
+            <td>Submits an application using a saved profile in a single tap.</td>
+            <td>Monitors application status and waits for updates from employers.</td>
+          </tr>
+          <tr>
+            <td class="uj-row-label"><strong>User Goals</strong><small>What does the user goals?</small></td>
+            <td>To begin an organized job search without feeling overwhelmed.</td>
+            <td>To quickly find relevant roles that match their skills and preferences.</td>
+            <td>To assess whether the role and company are a good, trustworthy fit.</td>
+            <td>To apply quickly without re-entering the same information repeatedly.</td>
+            <td>To stay informed about each application's progress.</td>
+          </tr>
+          <tr>
+            <td class="uj-row-label"><strong>User Feeling</strong><small>What does the user feel?</small></td>
+            <td class="uj-emoji">🚟</td>
+            <td class="uj-emoji">🤔</td>
+            <td class="uj-emoji">🧐</td>
+            <td class="uj-emoji">😀</td>
+            <td class="uj-emoji">😍</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== TICKER: Ideate ===================== -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker__track" style="--dur:22s">
+    <span class="on">Ideate</span><span>Ideate</span><span class="on">Ideate</span><span>Ideate</span><span class="on">Ideate</span><span>Ideate</span><span class="on">Ideate</span><span>Ideate</span>
+  </div>
+</div>
+
+<!-- ===================== USER PERSONA ===================== -->
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="kicker">04 — User Persona</span>
+      <h2 class="h-section">User Persona</h2>
+      <p class="h-sub">A composite profile built from research interviews to keep the design grounded in real user needs.</p>
+    </div>
+    <div data-reveal style="border-radius:20px;overflow:hidden;box-shadow:0 16px 56px -20px rgba(30,27,75,.22);">
+      <!-- Top: profile header -->
+      <div style="display:grid;grid-template-columns:240px 1fr;">
+        <div style="background:#2a2840;min-height:280px;">
+          <img src="img/Jeremy.png" alt="Persona photo" style="width:100%;height:100%;object-fit:cover;display:block;">
+        </div>
+        <div style="background:#4338CA;padding:36px 40px;display:flex;flex-direction:column;justify-content:center;">
+          <h3 style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:#fff;margin:0 0 16px;">Profile</h3>
+          <p style="font-size:14.5px;line-height:1.85;color:rgba(255,255,255,.88);margin:0;text-align:justify;">Jeremy is a fresh graduate from Parahyangan Catholic University. Currently he is looking for a job in accordance with the field he took in college and looking for an application that can make it easy for him to find a job so he can get a job. Jeremy finds it difficult to find a job because there are several things that make him feel difficult when applying for a job.</p>
+        </div>
+      </div>
+      <!-- Bottom: details -->
+      <div style="display:grid;grid-template-columns:240px 1fr;background:#fff;">
+        <!-- Left: identity -->
+        <div style="padding:32px 30px;display:flex;flex-direction:column;gap:20px;border-right:1px solid #e8e8e8;">
+          <div><p style="font-size:15px;font-weight:700;color:#2a2840;margin:0 0 4px;">Name</p><p style="font-size:14px;color:#555;margin:0;">Jeremy</p></div>
+          <div><p style="font-size:15px;font-weight:700;color:#2a2840;margin:0 0 4px;">Age</p><p style="font-size:14px;color:#555;margin:0;">22 Years Old</p></div>
+          <div><p style="font-size:15px;font-weight:700;color:#2a2840;margin:0 0 4px;">Job Title</p><p style="font-size:14px;color:#555;margin:0;">Freelance</p></div>
+          <div><p style="font-size:15px;font-weight:700;color:#2a2840;margin:0 0 4px;">Location</p><p style="font-size:14px;color:#555;margin:0;">Bandung, Indonesia</p></div>
+        </div>
+        <!-- Right: goals + frustrations -->
+        <div style="padding:32px 40px;display:flex;flex-direction:column;gap:28px;">
+          <div>
+            <h4 style="font-size:17px;font-weight:700;color:#2a2840;margin:0 0 12px;padding-bottom:10px;border-bottom:1.5px solid #e8e8e8;">Goals</h4>
+            <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:10px;font-size:14px;line-height:1.7;color:#3a3858;">
+              <li>I want a job search application that can be used easily.</li>
+              <li>I want to apply for jobs easily.</li>
+              <li>I would like to know information about job descriptions, requirements for applying, salary and job location.</li>
+              <li>I would like notifications such as whether my CV was rejected or continued.</li>
+            </ul>
+          </div>
+          <div>
+            <h4 style="font-size:17px;font-weight:700;color:#2a2840;margin:0 0 12px;padding-bottom:10px;border-bottom:1.5px solid #e8e8e8;">Frustations</h4>
+            <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:10px;font-size:14px;line-height:1.7;color:#3a3858;">
+              <li>It is very difficult to find a fresh graduate job.</li>
+              <li>I can't find out the salary given by the company.</li>
+              <li>It's hard to find a job near my house.</li>
+              <li>I can't find out if my CV was viewed, continued, or not.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== HOW MIGHT WE ===================== -->
+<section class="section" id="design">
+  <div class="wrap">
+    <div class="sec-head center" data-reveal>
+      <span class="kicker center">05 — Ideate</span>
+      <h2 class="h-section">How Might We</h2>
+      <p class="h-sub">Design prompts that guide creative solutions from research insights.</p>
+    </div>
+    <div class="hmw">
+      <div class="hmw-card" data-reveal><span class="q">HMW · 01</span>Make job discovery feel as fast as a search engine — show the right roles in under 10 seconds?</div>
+      <div class="hmw-card" data-reveal data-delay="1"><span class="q">HMW · 02</span>Reduce the effort of applying to the absolute minimum — one profile, one tap?</div>
+      <div class="hmw-card" data-reveal data-delay="2"><span class="q">HMW · 03</span>Give applicants real-time visibility into where each application stands?</div>
+      <div class="hmw-card" data-reveal data-delay="3"><span class="q">HMW · 04</span>Build enough trust in listings that users feel confident applying without hesitation?</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== USER FLOW ===================== -->
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="kicker">06 — Prototype</span>
+      <h2 class="h-section">User Flow</h2>
+      <p class="h-sub">The core application journey — from discovery to confirmed submission.</p>
+    </div>
+    <div data-reveal style="background:#fff;border-radius:var(--r-lg);overflow:hidden;padding:8px;box-shadow:var(--shadow)">
+      <img src="img/User Flow Jobs Hunt.png" alt="User Flow — JobsHunt" style="width:100%;display:block;border-radius:12px">
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SKETCH ===================== -->
+<section class="section section--tight">
+  <div class="wrap" style="max-width:1560px">
+    <div class="sec-head" data-reveal>
+      <span class="kicker">Sketch</span>
+      <h2 class="h-section">Sketch</h2>
+      <p class="h-sub">Early paper explorations before moving to digital wireframes.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px" data-reveal>
+      <div class="hifi-media" style="aspect-ratio:494/373;border-radius:16px;overflow:hidden;"><img src="img/WhatsApp Image 2023-06-27 at 2.25 4.png" alt="Sketch — Home &amp; Search" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+      <div class="hifi-media" style="aspect-ratio:494/373;border-radius:16px;overflow:hidden;"><img src="img/WhatsApp Image 2023-06-27 at 2.25 4-1.png" alt="Sketch — Saved &amp; Profile" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+      <div class="hifi-media" style="aspect-ratio:494/373;border-radius:16px;overflow:hidden;"><img src="img/WhatsApp Image 2023-06-29 at 1.57 3.png" alt="Sketch — Job Description" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== TICKER: Prototyping ===================== -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker__track" style="--dur:20s">
+    <span class="on">Prototyping</span><span>Prototyping</span><span class="on">Prototyping</span><span>Prototyping</span><span class="on">Prototyping</span><span>Prototyping</span>
+  </div>
+</div>
+
+<!-- ===================== WIREFRAME ===================== -->
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="kicker">Lo-fi</span>
+      <h2 class="h-section">Wireframe</h2>
+      <p class="h-sub">Low-fidelity screens mapping the core layouts before adding visual design.</p>
+    </div>
+    <div data-reveal style="background:#e0e0e0;border-radius:var(--r-lg);overflow:hidden;padding:28px 32px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:20px;align-items:center">
+      <img src="img/Wireframe Kiri.png" alt="Wireframe — Home &amp; Search" style="width:auto;max-width:340px;height:auto;display:block;border-radius:8px">
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px;width:100%">
+        <img src="img/Wireframe Kanan Atas.png" alt="Wireframe — Saved &amp; Profile" style="width:100%;display:block;border-radius:8px">
+        <img src="img/Wireframe Kanan Bawah.png" alt="Wireframe — Job Description" style="width:100%;display:block;border-radius:8px">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== UI DESIGN KIT ===================== -->
+<section class="section" id="hifi">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="kicker">Design System</span>
+      <h2 class="h-section">UI Design Kit</h2>
+      <p class="h-sub">I created a web style guide, that included everything from buttons, colours, icons, and typography.</p>
+    </div>
+
+    <!-- Colour swatches -->
+    <div class="swatchrow" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:52px" data-reveal>
+      <div style="background:#2F5AD8;padding-top:150%;position:relative;border-radius:4px"><span style="position:absolute;bottom:16px;left:16px;font-size:13px;color:#fff;font-weight:500">Cerulean Blue</span></div>
+      <div style="background:#333333;padding-top:150%;position:relative;border-radius:4px"><span style="position:absolute;bottom:16px;left:16px;font-size:13px;color:#fff;font-weight:500">Mine Shaft</span></div>
+      <div style="background:#FFFFFF;padding-top:150%;position:relative;border:1px solid #e4e4e4;border-radius:4px"><span style="position:absolute;bottom:16px;left:16px;font-size:13px;color:#555;font-weight:500">White</span></div>
+      <div style="background:#E6E6E6;padding-top:150%;position:relative;border-radius:4px"><span style="position:absolute;bottom:16px;left:16px;font-size:13px;color:#555;font-weight:500">Mercury</span></div>
+    </div>
+
+    <hr style="border:none;border-top:1px solid var(--line);margin:0 0 44px">
+
+    <!-- Typography + Nav -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:52px;margin-bottom:48px;align-items:start" data-reveal>
+      <table style="border-collapse:collapse;width:100%">
+        <tr><td style="width:90px;font-size:13.5px;color:var(--muted);vertical-align:top;padding:8px 0">Poppins</td><td style="font-size:14px;line-height:1.55;color:var(--ink);padding:6px 0;word-break:break-word">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789</td></tr>
+        <tr><td style="font-size:13.5px;color:var(--muted);vertical-align:middle;padding:10px 0">H1</td><td style="font-size:34px;font-weight:700;color:var(--ink);padding:6px 0;line-height:1.1">Heading</td></tr>
+        <tr><td style="font-size:13.5px;color:var(--muted);vertical-align:middle;padding:10px 0">H2</td><td style="font-size:24px;font-weight:700;color:var(--ink);padding:6px 0;line-height:1.2">Heading</td></tr>
+        <tr><td style="font-size:13.5px;color:var(--muted);vertical-align:middle;padding:10px 0">H3</td><td style="font-size:18px;font-weight:400;color:var(--ink);padding:6px 0;line-height:1.3">Heading</td></tr>
+        <tr><td style="font-size:13.5px;color:var(--muted);vertical-align:top;padding:10px 0">Body</td><td style="font-size:13.5px;color:var(--muted);padding:6px 0;line-height:1.75">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</td></tr>
+      </table>
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <div><div style="background:#fff;border-radius:12px;padding:14px 30px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 16px rgba(0,0,0,.09);border:1px solid rgba(0,0,0,.05)">
+          <span style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2F5AD8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5"/><path d="M5 9v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9"/></svg><span style="width:4px;height:4px;border-radius:50%;background:#2F5AD8"></span></span>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9aa0ab" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9aa0ab" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 21l-6-4.5L6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9aa0ab" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5 21v-1a6 6 0 0 1 12 0v1"/></svg>
+        </div><p style="text-align:center;font-size:12px;color:var(--muted);margin-top:8px">Nav buttons Homepage</p></div>
+        <div><div style="background:#fff;border-radius:12px;padding:14px 30px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 16px rgba(0,0,0,.09);border:1px solid rgba(0,0,0,.05)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9aa0ab" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5"/><path d="M5 9v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9"/></svg>
+          <span style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2F5AD8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="2.5"/></svg><span style="width:4px;height:4px;border-radius:50%;background:#2F5AD8"></span></span>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9aa0ab" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 21l-6-4.5L6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9aa0ab" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5 21v-1a6 6 0 0 1 12 0v1"/></svg>
+        </div><p style="text-align:center;font-size:12px;color:var(--muted);margin-top:8px">Nav buttons Search By Location</p></div>
+        <div><div style="background:#fff;border-radius:12px;padding:14px 30px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 16px rgba(0,0,0,.09);border:1px solid rgba(0,0,0,.05)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9aa0ab" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5"/><path d="M5 9v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9aa0ab" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          <span style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2F5AD8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 21l-6-4.5L6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z"/></svg><span style="width:4px;height:4px;border-radius:50%;background:#2F5AD8"></span></span>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9aa0ab" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5 21v-1a6 6 0 0 1 12 0v1"/></svg>
+        </div><p style="text-align:center;font-size:12px;color:var(--muted);margin-top:8px">Nav buttons Saved Jobs</p></div>
+        <div><div style="background:#fff;border-radius:12px;padding:14px 30px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 16px rgba(0,0,0,.09);border:1px solid rgba(0,0,0,.05)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9aa0ab" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5"/><path d="M5 9v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9aa0ab" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9aa0ab" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 21l-6-4.5L6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z"/></svg>
+          <span style="display:flex;flex-direction:column;align-items:center;gap:3px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2F5AD8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5 21v-1a6 6 0 0 1 12 0v1"/></svg><span style="width:4px;height:4px;border-radius:50%;background:#2F5AD8"></span></span>
+        </div><p style="text-align:center;font-size:12px;color:var(--muted);margin-top:8px">Nav buttons Profile</p></div>
+      </div>
+    </div>
+
+    <hr style="border:none;border-top:1px solid var(--line);margin:0 0 40px">
+
+    <!-- Icons + Buttons -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:start" data-reveal>
+      <div>
+        <div style="display:flex;flex-wrap:wrap;gap:18px;align-items:center;margin-bottom:18px">
+          <svg width="28" height="28" viewBox="0 0 24 24"><path d="M12.24 10.285V14.4h6.806c-.275 1.765-2.056 5.174-6.806 5.174-4.095 0-7.439-3.389-7.439-7.574s3.345-7.574 7.439-7.574c2.33 0 3.891.989 4.785 1.849l3.254-3.138C18.189 1.186 15.479 0 12.24 0c-6.635 0-12 5.365-12 12s5.365 12 12 12c6.926 0 11.52-4.869 11.52-11.727 0-.788-.085-1.39-.189-1.989H12.24z" fill="#4285F4"/></svg>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="#F5B301"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="28" height="28" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#E53935"/><line x1="15" y1="9" x2="9" y2="15" stroke="white" stroke-width="2"/><line x1="9" y1="9" x2="15" y2="15" stroke="white" stroke-width="2"/></svg>
+          <svg width="28" height="28" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#4F46E5"/><line x1="12" y1="8" x2="12" y2="12" stroke="white" stroke-width="2.5" stroke-linecap="round"/><circle cx="12" cy="16" r="1.2" fill="white"/></svg>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:18px;align-items:center">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:120px 1fr;gap:18px 16px;align-items:center">
+        <span style="font-size:14px;color:var(--muted)">Primary</span>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <button style="background:#2F5AD8;color:#fff;border:none;border-radius:8px;padding:14px 30px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif">Large</button>
+          <button style="background:#2F5AD8;color:#fff;border:none;border-radius:8px;padding:12px 22px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif">Medium</button>
+          <button style="background:#2F5AD8;color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif">Small</button>
+        </div>
+        <span style="font-size:14px;color:var(--muted)">Secondary</span>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <button style="background:#fff;color:#2F5AD8;border:2px solid #2F5AD8;border-radius:8px;padding:13px 30px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif">Large</button>
+          <button style="background:#fff;color:#2F5AD8;border:2px solid #2F5AD8;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif">Small</button>
+        </div>
+        <span style="font-size:14px;color:var(--muted)">Primary Disabled</span>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <button style="background:#D4D4D4;color:#8a8a8a;border:none;border-radius:8px;padding:14px 30px;font-size:15px;font-weight:600;cursor:not-allowed;font-family:'Poppins',sans-serif">Large</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== HI-FI ===================== -->
+<section class="section section--tight">
+  <div class="wrap" style="max-width:1560px">
+    <div class="sec-head" data-reveal>
+      <span class="kicker">07 — The Result</span>
+      <h2 class="h-section">High Fidelity <span class="grad">(Hi-Fi)</span></h2>
+      <p class="h-sub">Final screens combining research insights, user flow, and the design system into a polished prototype.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:28px" data-reveal>
+      <div class="hifi-media"><img src="img/Background.png" alt="Hi-Fi — Home screen mockup" style="width:100%;display:block;border-radius:16px;"></div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:28px">
+        <div class="hifi-media"><img src="img/Hifi1.png" alt="Hi-Fi — Create Account & Sign In" style="width:100%;display:block;border-radius:16px;"></div>
+        <div class="hifi-media"><img src="img/Hifi1-1.png" alt="Hi-Fi — OTP & Job Description" style="width:100%;display:block;border-radius:16px;"></div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:center;margin-top:40px" data-reveal>
+      <a href="https://www.figma.com/proto/SrR4mmAfBxOWZjGO50JhUe/Portofolio-Thomas-Christian-Haeryono?page-id=2149%3A10335&type=design&node-id=2149-10346&viewport=1433%2C734%2C0.23&t=VQhNqDvR0S4Hli75-1&scaling=scale-down&starting-point-node-id=2149%3A10346&mode=design" target="_blank" rel="noopener" class="b lg" style="text-decoration:none;display:inline-flex;align-items:center;gap:10px">See Prototype →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== USABILITY TESTING ===================== -->
+<section class="section">
+  <div class="wrap">
+    <div data-reveal>
+      <span class="kicker">08 — Test</span>
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-size:clamp(40px,6.5vw,76px);font-weight:800;color:var(--ink);letter-spacing:-.03em;margin:16px 0 20px;line-height:1">Usability Testing</h2>
+      <p style="font-size:15px;color:var(--muted);line-height:1.75;max-width:900px;margin-bottom:52px">In order to test the overall quality and ease of navigation throughout the whole design, and to observe areas of errors/difficulties, I went out and had 2 participants interact with my prototype.</p>
+    </div>
+    <div style="border-top:1.5px solid var(--line)" data-reveal>
+      <div style="display:grid;grid-template-columns:200px 1fr;gap:32px;padding:36px 0;border-bottom:1px solid var(--line)">
+        <h3 style="font-size:15.5px;font-weight:600;color:var(--ink);margin:0;padding-top:2px">Participant Criteria 1</h3>
+        <ol style="margin:0;padding-left:20px;color:var(--ink);font-size:14.5px;line-height:2">
+          <li>Male Female</li>
+          <li>Lives in Jakarta and Bandung area</li>
+          <li>Age 21–30 years</li>
+          <li>Actively looking for a job</li>
+          <li>Have applied for jobs through a similar application</li>
+        </ol>
+      </div>
+      <div style="display:grid;grid-template-columns:200px 1fr;gap:32px;padding:36px 0;border-bottom:1px solid var(--line)">
+        <h3 style="font-size:15.5px;font-weight:600;color:var(--ink);margin:0;padding-top:2px">Participant Criteria 2</h3>
+        <ol style="margin:0;padding-left:20px;color:var(--ink);font-size:14.5px;line-height:2">
+          <li>Male Female</li>
+          <li>Lives in Jakarta and Bandung area</li>
+          <li>Age 21–30 years</li>
+          <li>Actively looking for a job</li>
+          <li>Have never applied for a job through a similar application</li>
+        </ol>
+      </div>
+      <div style="display:grid;grid-template-columns:200px 1fr;gap:32px;padding:36px 0;border-bottom:1px solid var(--line)">
+        <h3 style="font-size:15.5px;font-weight:600;color:var(--ink);margin:0;padding-top:2px">Scenario</h3>
+        <p style="margin:0;color:var(--ink);font-size:14.5px;line-height:1.8">Sign in using email and play the role of a job seeker — find a UI/UX Designer role, apply for it using your saved profile, then check your application status. When you're done, we'll ask you a few questions about how you can use the prototype.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:200px 1fr;gap:32px;padding:36px 0">
+        <h3 style="font-size:15.5px;font-weight:600;color:var(--ink);margin:0;padding-top:2px">Summary</h3>
+        <ul style="margin:0;padding-left:20px;color:var(--ink);font-size:14.5px;line-height:1.8;display:flex;flex-direction:column;gap:10px">
+          <li>Completion Rate: 100%</li>
+          <li>Average time to apply: 47 seconds</li>
+          <li>Participants completed the one-tap apply flow easily without any guidance.</li>
+          <li>The UI display is very clean, and the job listings are easy to scan.</li>
+          <li>Participants appreciated seeing salary and work model before opening a listing.</li>
+          <li>Some participants wanted clearer verified-company badges to build more trust.</li>
+          <li>Participants found the application tracking dashboard very helpful and reassuring.</li>
+          <li>Most people mentioned the app felt much lighter and more focused than LinkedIn, and didn't struggle to complete the tasks.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== NEXT PROJECT ===================== -->
+<section style="position:relative;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--bg);">
+  <style>@keyframes jh-np-scroll{to{transform:translateX(-50%)}}</style>
+  <div style="position:absolute;top:50%;left:0;right:0;transform:translateY(-50%);overflow:hidden;white-space:nowrap;pointer-events:none;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+            mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);" aria-hidden="true">
+    <div style="display:inline-block;white-space:nowrap;font-family:'Poppins',system-ui,sans-serif;font-size:clamp(72px,13vw,188px);font-weight:700;line-height:1;letter-spacing:-.025em;color:var(--ink);animation:jh-np-scroll 30s linear infinite;">
+      <span>Next Project&nbsp;&nbsp;•&nbsp;&nbsp;</span><span>Next Project&nbsp;&nbsp;•&nbsp;&nbsp;</span><span>Next Project&nbsp;&nbsp;•&nbsp;&nbsp;</span><span>Next Project&nbsp;&nbsp;•&nbsp;&nbsp;</span><span>Next Project&nbsp;&nbsp;•&nbsp;&nbsp;</span><span>Next Project&nbsp;&nbsp;•&nbsp;&nbsp;</span><span>Next Project&nbsp;&nbsp;•&nbsp;&nbsp;</span><span>Next Project&nbsp;&nbsp;•&nbsp;&nbsp;</span><span>Next Project&nbsp;&nbsp;•&nbsp;&nbsp;</span><span>Next Project&nbsp;&nbsp;•&nbsp;&nbsp;</span><span>Next Project&nbsp;&nbsp;•&nbsp;&nbsp;</span><span>Next Project&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+    </div>
+  </div>
+  <a href="vms.html" class="np-link" style="position:relative;z-index:2;width:min(820px,60vw);aspect-ratio:16/10;max-height:62vh;filter:drop-shadow(0 36px 60px rgba(40,28,14,.22));display:block;border-radius:20px;overflow:hidden;cursor:pointer;transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s;">
+    <img src="img/311_1x_shots_so-c9a472ea.png" alt="Next project — VMS" style="display:block;width:100%;height:100%;object-fit:cover;border-radius:20px;">
+  </a>
+  <style>.np-link:hover{transform:translateY(-6px) scale(1.02) !important;box-shadow:0 40px 80px -30px rgba(0,0,0,.4) !important;}</style>
+</section>
+
+<!-- ===================== CONTACT ===================== -->
+<section id="contact" style="min-height:80vh;display:flex;flex-direction:column;justify-content:center;background:#1c1a18;padding:clamp(60px,10vw,130px) clamp(20px,5vw,84px);">
+  <div style="max-width:1200px;margin:0 auto;width:100%">
+    <p style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:36px;">Let's work together</p>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(56px,11vw,140px);line-height:.9;letter-spacing:-.035em;color:#fff;margin-bottom:52px;">Have an<br/><span style="background:linear-gradient(100deg,#4338CA,#6366F1);-webkit-background-clip:text;background-clip:text;color:transparent;">idea?</span></h2>
+    <a href="mailto:thomaschristian2207@gmail.com" style="display:inline-block;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:clamp(16px,2.4vw,28px);color:rgba(255,255,255,.7);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:6px;margin-bottom:60px;">thomaschristian2207@gmail.com ↗</a>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;">
+      <a href="https://www.linkedin.com/in/thomas-christian-haeryono/" target="_blank" rel="noopener" class="sl-pill" style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.6);text-decoration:none;border:1px solid rgba(255,255,255,.15);padding:13px 24px;border-radius:100px;">LinkedIn ↗</a>
+      <a href="https://www.behance.net/thomaschristian8" target="_blank" rel="noopener" class="sl-pill" style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.6);text-decoration:none;border:1px solid rgba(255,255,255,.15);padding:13px 24px;border-radius:100px;">Behance ↗</a>
+      <a href="https://www.instagram.com/thomaschristianh?igsh=YzRlbDhiZXlydDFh&utm_source=qr" target="_blank" rel="noopener" class="sl-pill" style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.6);text-decoration:none;border:1px solid rgba(255,255,255,.15);padding:13px 24px;border-radius:100px;">Instagram ↗</a>
+    </div>
+  </div>
+</section>
+
+<div class="foot-note" style="background:#1c1a18;border-top-color:rgba(255,255,255,.07);color:rgba(255,255,255,.18);">© 2024 Thomas Christian Haeryono · JobsHunt — a case study</div>
+
+<style>#contact a[href="#"]{transition:background .3s,color .3s,border-color .3s}#contact a[href="#"]:hover{background:rgba(255,255,255,.1);color:#fff!important;border-color:rgba(255,255,255,.4)!important}</style>
+<a class="back-home" href="index.html#skip">← Back to home</a>
+
+<button id="scTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top" style="position:fixed;bottom:80px;right:24px;width:46px;height:46px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(100deg,#4338CA,#6366F1);color:#fff;font-size:20px;z-index:300;box-shadow:0 4px 20px rgba(67,56,202,.35);display:none;align-items:center;justify-content:center;line-height:1;">↑</button>
+<script>(function(){var b=document.getElementById('scTop');window.addEventListener('scroll',function(){b.style.display=window.scrollY>400?'flex':'none';},{passive:true});})();</script>
+<script src="js/main.js"></script>
+<style id="sl-hover">.sl-pill{transition:background .3s ease,border-color .3s ease,color .3s ease,transform .38s cubic-bezier(.2,.85,.25,1),box-shadow .38s ease}.sl-pill:hover{background:rgba(255,255,255,.1)!important;border-color:rgba(255,255,255,.6)!important;color:#fff!important;transform:translateY(-4px);box-shadow:0 12px 28px rgba(0,0,0,.3)}</style>
+</body>
+</html>
