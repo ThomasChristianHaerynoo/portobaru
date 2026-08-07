@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AdiBot — AI Interview Platform · Case Study (Light)</title>
+<link rel="stylesheet" href="styles-light.css" />
+<link id="gfont-Poppins" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap">
+</head>
+<body style="font-family: Poppins">
+
+<template id="__bundler_thumbnail" data-bg-color="#f3f2fa">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#f3f2fa"/>
+    <rect x="470" y="300" width="260" height="200" rx="34" fill="url(#g)"/>
+    <text x="600" y="438" font-family="'Space Grotesk',sans-serif" font-size="120" font-weight="700" fill="#fff" text-anchor="middle">A</text>
+    <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6d4dff"/><stop offset="1" stop-color="#07b3bd"/></linearGradient></defs>
+  </svg>
+</template>
+
+<div class="bg-fx"></div>
+<div class="bg-grid"></div>
+<div class="progress" id="progress"></div>
+
+
+
+<!-- ===================== HERO ===================== -->
+<header class="hero" data-screen-label="Hero">
+  <div class="hero__orb a"></div>
+  <div class="hero__orb b"></div>
+  <div class="hero__orb c"></div>
+
+  <div class="hero__body">
+    <div class="hero__col">
+      <span class="hero__tag" data-reveal><span class="live"></span> AI-POWERED INTERVIEW PLATFORM</span>
+      <h1 class="hero__title" data-reveal data-delay="1">Adi<span class="alt">Bot</span></h1>
+      <p class="hero__lead" data-reveal data-delay="2">A conversational AI interviewer that screens candidates, transcribes in real time, and <strong>quietly grades every applicant</strong> — so recruiters spend their hours only on the people who matter.</p>
+      <div class="hero__meta" data-reveal data-delay="3">
+        <div class="item"><div class="k">Role</div><div class="v">UI/UX Designer</div></div>
+        <div class="item"><div class="k">Client</div><div class="v">Adidata Company</div></div>
+        <div class="item"><div class="k">Year</div><div class="v">2025</div></div>
+        <div class="item"><div class="k">Platform</div><div class="v">Web App</div></div>
+      </div>
+    </div>
+
+    <div class="hero__art" data-reveal data-delay="2">
+      <div class="hero__stage" id="heroStage">
+        <div class="hero__screen"><img src="assets/welcome.png" alt="AdiBot welcome screen" /></div>
+        <img class="hero__mascot" src="assets/mascot.png" alt="AdiBot mascot" />
+        <div class="hero__chip one">
+          <span class="ic" style="background:rgba(255,82,71,.16);color:var(--red)">●</span>
+          <div>Recording<small>live transcript</small></div>
+        </div>
+        <div class="hero__chip two">
+          <span class="ic" style="background:rgba(75,227,155,.16);color:var(--green)">✓</span>
+          <div>Above average<small>auto-graded</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-cue">Scroll<span class="bar"></span></div>
+</header>
+
+<!-- ===================== TICKER ===================== -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker__track" style="--dur:36s">
+    <span class="on">Empathize</span><span>Define</span><span class="on">Ideate</span><span>Prototype</span><span class="on">Test</span><span>Empathize</span><span>Define</span><span class="on">Ideate</span><span>Prototype</span><span>Test</span>
+  </div>
+</div>
+
+<!-- ===================== OVERVIEW ===================== -->
+<section class="section" id="overview">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="kicker">01 — Background</span>
+      <h2 class="h-section">What if the first<br/>interview could <span class="grad">run itself?</span></h2>
+    </div>
+
+    <div class="prose">
+      <p data-reveal>Fast-growing hiring teams hit the same wall: <strong>too many applicants, too few hours.</strong> First-round screening still has to be scheduled, attended, and scored by a recruiter one candidate at a time — slow, and inconsistent by the end of a long day.</p>
+      <p class="ask" data-reveal>So we asked: what if the first interview could <em>run itself</em>?</p>
+      <p data-reveal>AdiBot interviews candidates on their own time through a link that <strong>expires after a few days</strong>, then grades each one against a benchmark — <strong>above or below average</strong>. Only the recruiter sees the score, keeping the assessment honest.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== GOAL ===================== -->
+<section class="section section--tight">
+  <div class="wrap goal">
+    <div data-reveal>
+      <div class="hero__screen" style="transform:none;box-shadow:var(--shadow),var(--glow-cyan)">
+        <img src="assets/preinterview.png" alt="AdiBot pre-interview screen" />
+      </div>
+    </div>
+    <div data-reveal data-delay="1">
+      <span class="kicker">The goal</span>
+      <p class="goal__stmt">Build a web platform that lets recruiters run <b>consistent, AI-driven</b> first-round interviews — and <b>automatically grade</b> every candidate so the best ones rise to the top.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PROCESS ===================== -->
+<section class="section" id="process">
+  <div class="wrap">
+    <div class="sec-head center" data-reveal>
+      <span class="kicker center">02 — Approach</span>
+      <h2 class="h-section">Design Process</h2>
+      <p class="h-sub">Five stages of Design Thinking — staying anchored to the recruiter's real workflow at every step.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step" data-reveal><div class="step__n">01</div><span class="step__ic">🗣️</span><div class="step__t">Empathize</div><div class="step__d">Interviewed HR teams to learn how screening really happens.</div></div>
+      <div class="step" data-reveal data-delay="1"><div class="step__n">02</div><span class="step__ic">🎯</span><div class="step__t">Define</div><div class="step__d">Turned raw quotes into sharp problem statements.</div></div>
+      <div class="step" data-reveal data-delay="2"><div class="step__n">03</div><span class="step__ic">💡</span><div class="step__t">Ideate</div><div class="step__d">Brainstormed an AI host that interviews and grades.</div></div>
+      <div class="step" data-reveal data-delay="3"><div class="step__n">04</div><span class="step__ic">✏️</span><div class="step__t">Prototype</div><div class="step__d">Wireframed and built the dark, branded flow.</div></div>
+      <div class="step" data-reveal data-delay="4"><div class="step__n">05</div><span class="step__ic">🧪</span><div class="step__t">Test</div><div class="step__d">Ran recruiters and candidates through it end to end.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== RESEARCH OBJECTIVES ===================== -->
+<section class="section section--tight" id="research">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="kicker">03 — Research</span>
+      <h2 class="h-section">Research Objectives</h2>
+      <p class="h-sub">Understand the recruiter's screening workload, and define exactly where an AI interviewer could earn its place.</p>
+    </div>
+
+    <div class="grid g-3">
+      <div class="card" data-reveal>
+        <div class="card__icon cyan">⏱</div>
+        <h3>Workload</h3>
+        <p>Measure how much recruiter time first-round screening actually consumes each week.</p>
+      </div>
+      <div class="card" data-reveal data-delay="1">
+        <div class="card__icon violet">⚖️</div>
+        <h3>Consistency</h3>
+        <p>Learn how scoring varies between candidates and across a long interview day.</p>
+      </div>
+      <div class="card" data-reveal data-delay="2">
+        <div class="card__icon red">🔒</div>
+        <h3>Trust</h3>
+        <p>Understand what recruiters need before they'll trust an automated grade.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SURVEY ===================== -->
+<section class="section">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="kicker">Voice of the user</span>
+      <h2 class="h-section">What do recruiters<br/><span class="grad">actually think?</span></h2>
+      <p class="h-sub">I ran a short survey and interviews with HR recruiters about how they screen candidates today.</p>
+    </div>
+
+    <div class="survey">
+      <div class="qbubbles" data-reveal>
+        <span class="qbubble">How many candidates do you screen per role?</span>
+        <span class="qbubble">How long does one screening interview take?</span>
+        <span class="qbubble">Do your scores feel consistent first to last?</span>
+        <span class="qbubble">Would you trust an AI-generated grade?</span>
+        <span class="qbubble">How important is a recorded transcript?</span>
+        <span class="qbubble">Have you used an AI interview tool before?</span>
+      </div>
+
+      <div data-reveal data-delay="1">
+        <div class="stat">
+          <div class="stat__top"><span class="stat__label">Find first-round screening too time-consuming</span><span class="stat__pct" data-count="78">0%</span></div>
+          <div class="stat__track"><div class="stat__fill" data-pct="78"></div></div>
+        </div>
+        <div class="stat">
+          <div class="stat__top"><span class="stat__label">Admit scoring drifts late in an interview day</span><span class="stat__pct" data-count="64">0%</span></div>
+          <div class="stat__track"><div class="stat__fill" data-pct="64"></div></div>
+        </div>
+        <div class="stat">
+          <div class="stat__top"><span class="stat__label">Want a searchable transcript of every interview</span><span class="stat__pct" data-count="86">0%</span></div>
+          <div class="stat__track"><div class="stat__fill" data-pct="86"></div></div>
+        </div>
+        <div class="stat">
+          <div class="stat__top"><span class="stat__label">Would trust an AI grade if a human reviews the shortlist</span><span class="stat__pct" data-count="71">0%</span></div>
+          <div class="stat__track"><div class="stat__fill" data-pct="71"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== AFFINITY ===================== -->
+<section class="section">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="kicker">Synthesis</span>
+      <h2 class="h-section">Affinity Mapping</h2>
+      <p class="h-sub">I clustered every research insight into three themes that shaped the product direction.</p>
+    </div>
+
+    <div class="affinity">
+      <div class="aff-row" data-reveal>
+        <div class="aff-theme"><span>THEME 01</span>Time &amp; Volume</div>
+        <div class="aff-notes">
+          <div class="aff-note">Screening eats the largest share of a recruiter's week.</div>
+          <div class="aff-note">A role can draw 100+ applicants needing a first call.</div>
+          <div class="aff-note">Async, always-on interviews remove scheduling pain.</div>
+        </div>
+      </div>
+      <div class="aff-row" data-reveal>
+        <div class="aff-theme"><span>THEME 02</span>Consistency</div>
+        <div class="aff-notes">
+          <div class="aff-note">Questions vary candidate to candidate.</div>
+          <div class="aff-note">Scores drift as the day goes on.</div>
+          <div class="aff-note">A benchmark makes candidates comparable.</div>
+        </div>
+      </div>
+      <div class="aff-row" data-reveal>
+        <div class="aff-theme"><span>THEME 03</span>Trust &amp; Privacy</div>
+        <div class="aff-notes">
+          <div class="aff-note">Recruiters want a human to confirm the shortlist.</div>
+          <div class="aff-note">Transcripts must be searchable &amp; saved.</div>
+          <div class="aff-note">Candidates must never see their own grade.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== HOW MIGHT WE ===================== -->
+<section class="section">
+  <div class="wrap">
+    <div class="sec-head center" data-reveal>
+      <span class="kicker center">05 — Ideate</span>
+      <h2 class="h-section">How Might We</h2>
+      <p class="h-sub">Turning insights into focused prompts that keep brainstorming user-centred.</p>
+    </div>
+
+    <div class="hmw">
+      <div class="hmw-card" data-reveal><span class="q">HMW 01</span>How might we let candidates interview <strong>anytime</strong>, with no scheduling at all?</div>
+      <div class="hmw-card" data-reveal data-delay="1"><span class="q">HMW 02</span>How might we make an AI interviewer feel <strong>warm and human</strong>, not robotic?</div>
+      <div class="hmw-card" data-reveal data-delay="1"><span class="q">HMW 03</span>How might we grade candidates <strong>consistently</strong> against one benchmark?</div>
+      <div class="hmw-card" data-reveal data-delay="2"><span class="q">HMW 04</span>How might we keep scores <strong>private to the recruiter</strong> and hidden from candidates?</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== USER FLOW ===================== -->
+<section class="section section--tight" id="design">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="kicker">06 — Prototype</span>
+      <h2 class="h-section">User Flow</h2>
+      <p class="h-sub">The candidate's path from landing on the invite to a graded, completed interview.</p>
+    </div>
+
+    <div data-reveal style="border-radius:20px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow)">
+      <img src="uploads/adibot-user-flow.png" alt="AdiBot candidate user flow diagram" style="width:100%;display:block" />
+    </div>
+    <p class="h-sub" data-reveal style="margin-top:30px;max-width:680px">The answer ↺ question loop repeats until AdiBot has enough signal, then it closes the interview and routes the private score to the recruiter only.</p>
+  </div>
+</section>
+
+<!-- ===================== WIREFRAME ===================== -->
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="kicker">Lo-fi</span>
+      <h2 class="h-section">Wireframe</h2>
+      <p class="h-sub">Low-fidelity screens to validate both sides of the product — the candidate's interview and the recruiter's dashboard — before committing to the dark, branded UI.</p>
+    </div>
+
+    <div class="track is-user">
+      <div class="track__head" data-reveal>
+        <div class="track__badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.8 20c.6-3.7 3.6-5.8 7.2-5.8s6.6 2.1 7.2 5.8"></path></svg></div>
+        <div class="track__meta"><div class="track__tag">User — candidate</div><h3 class="track__t">Candidate interview flow</h3><p class="track__d">Four low-fidelity screens tracing the candidate from the invite link to a finished, graded interview.</p></div>
+        <div class="track__count">04 screens</div>
+      </div>
+      <div class="wf-shots">
+        <figure class="wf-shot" data-reveal><img src="uploads/Desktop - 188.png" alt="Welcome screen wireframe" /><figcaption><span>01</span>Welcome</figcaption></figure>
+        <figure class="wf-shot" data-reveal data-delay="1"><img src="uploads/Desktop - 190.png" alt="Pre-interview wireframe" /><figcaption><span>02</span>Get ready</figcaption></figure>
+        <figure class="wf-shot" data-reveal><img src="uploads/Screenshot 2026-07-02 at 13.53.39.png" alt="Live interview wireframe" /><figcaption><span>03</span>Live conversation</figcaption></figure>
+        <figure class="wf-shot" data-reveal data-delay="1"><img src="uploads/Screenshot 2026-07-02 at 13.53.43.png" alt="Interview completed wireframe" /><figcaption><span>04</span>Completed</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="track is-hr">
+      <div class="track__head" data-reveal>
+        <div class="track__badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7.5" width="18" height="12.5" rx="2.4"></rect><path d="M9 7.5V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1.5M3 12.6h18"></path></svg></div>
+        <div class="track__meta"><div class="track__tag">HR — recruiter</div><h3 class="track__t">Recruiter dashboard flow</h3><p class="track__d">Six screens covering the recruiter side: monitoring, creating and sharing an interview, then reading the report.</p></div>
+        <div class="track__count">06 screens</div>
+      </div>
+      <div class="wf-shots">
+        <figure class="wf-shot" data-reveal><img src="uploads/adibot-wf-hr-dashboard.png" alt="Recruiter dashboard wireframe" /><figcaption><span>01</span>Dashboard overview</figcaption></figure>
+        <figure class="wf-shot" data-reveal data-delay="1"><img src="uploads/adibot-wf-hr-menu.png" alt="Menu navigation wireframe" /><figcaption><span>02</span>Menu navigation</figcaption></figure>
+        <figure class="wf-shot" data-reveal><img src="uploads/adibot-wf-hr-create.png" alt="Create new interview wireframe" /><figcaption><span>03</span>Create interview</figcaption></figure>
+        <figure class="wf-shot" data-reveal data-delay="1"><img src="uploads/adibot-wf-hr-ready.png" alt="Interview link ready wireframe" /><figcaption><span>04</span>Share &amp; schedule</figcaption></figure>
+        <figure class="wf-shot" data-reveal><img src="uploads/adibot-wf-hr-today.png" alt="Today's interview wireframe" /><figcaption><span>05</span>Today's interviews</figcaption></figure>
+        <figure class="wf-shot" data-reveal data-delay="1"><img src="uploads/adibot-wf-hr-report.png" alt="Candidate report wireframe" /><figcaption><span>06</span>Candidate report</figcaption></figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== UI KIT ===================== -->
+<section class="section">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="kicker">Design system</span>
+      <h2 class="h-section">UI Design Kit</h2>
+      <p class="h-sub">A compact style guide — colour, type, and components — for a calm, focused, trustworthy product.</p>
+    </div>
+
+    <div class="kit">
+      <div data-reveal>
+        <div class="swatches">
+          <div class="swatch" style="background:#070611"><b style="color:#fff">Midnight</b><span style="color:#fff">#070611</span></div>
+          <div class="swatch" style="background:#0f0c2a"><b style="color:#fff">Deep Indigo</b><span style="color:#fff">#0F0C2A</span></div>
+          <div class="swatch" style="background:#8b6dff"><b style="color:#06040f">Violet</b><span style="color:#06040f">#8B6DFF</span></div>
+          <div class="swatch" style="background:#46e2ea"><b style="color:#06040f">Cyan</b><span style="color:#06040f">#46E2EA</span></div>
+          <div class="swatch" style="background:#ff5247"><b style="color:#06040f">Brand Red</b><span style="color:#06040f">#FF5247</span></div>
+          <div class="swatch" style="background:#4be39b"><b style="color:#06040f">Success</b><span style="color:#06040f">#4BE39B</span></div>
+        </div>
+
+        <div class="kit-type" style="margin-top:28px">
+          <div class="row"><span class="role">Display</span><span style="font-family:'Space Grotesk';font-weight:700;font-size:26px">Space Grotesk</span></div>
+          <div class="row"><span class="role">Body</span><span style="font-family:'Manrope';font-size:18px">Manrope — clean &amp; readable</span></div>
+          <div class="row"><span class="role">Mono</span><span style="font-family:'JetBrains Mono';font-size:15px">JetBrains Mono · labels</span></div>
+          <div class="row"><span class="role">Body / 400</span><span style="color:var(--muted);font-size:14px">The quick brown fox jumps over the lazy dog while the interview is recorded.</span></div>
+        </div>
+      </div>
+
+      <div class="kit-comp" data-reveal data-delay="1">
+        <button class="btn-demo primary">🎥 Start Interview</button>
+        <button class="btn-demo danger">⏹ Stop Interview</button>
+        <button class="btn-demo ghost">Allow camera &amp; microphone</button>
+        <div class="chips-demo" style="margin-top:6px">
+          <span class="chip-rec">● Recording</span>
+          <span class="chip-ok">Above average</span>
+          <span class="chip-gen">Generating…</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== HIGHLIGHTS ===================== -->
+<section class="section" id="highlights" data-screen-label="Highlights">
+  <div class="wrap">
+    <div class="sec-head center" data-reveal>
+      <span class="kicker center">The result</span>
+      <h2 class="h-section">Product <span class="grad">Highlights</span></h2>
+      <p class="h-sub">The final interface — a focused dark UI led by AdiBot. The candidate meets the bot; the recruiter runs everything from a single dashboard.</p>
+    </div>
+
+    <div style="text-align:center;margin-top:26px" data-reveal>
+      <a class="track-btn" href="https://www.figma.com/proto/lDOtwiMufC7UZDHiNh5jnk/AI-Design?node-id=1120-16942&amp;p=f&amp;viewport=1808%2C1820%2C0.03&amp;t=E2FOJDc4wQawDpXF-1&amp;scaling=min-zoom&amp;content-scaling=fixed&amp;starting-point-node-id=1118%3A16870&amp;page-id=0%3A1" target="_blank" rel="noopener">See Prototype <span>→</span></a>
+    </div>
+
+    <div class="track is-user">
+      <div class="track__head" data-reveal>
+        <div class="track__badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.8 20c.6-3.7 3.6-5.8 7.2-5.8s6.6 2.1 7.2 5.8"></path></svg></div>
+        <div class="track__meta"><div class="track__tag">User — candidate</div><h3 class="track__t">Candidate interview</h3><p class="track__d">The final dark interface the candidate meets — AdiBot leads every step, from welcome to quiet grading.</p></div>
+        <div class="track__count">04 screens</div>
+      </div>
+      <div class="shots">
+        <div class="shot-wrap" data-reveal>
+          <div class="shot tilt"><img src="assets/welcome.png" alt="Warm welcome" /></div>
+          <div class="shot__cap"><span class="shot__n">01</span><div class="shot__txt"><div class="t">Warm welcome</div><div class="d">AdiBot greets the candidate by name and sets expectations before anything starts.</div></div></div>
+        </div>
+        <div class="shot-wrap" data-reveal data-delay="1">
+          <div class="shot tilt"><img src="assets/preinterview.png" alt="Get ready" /></div>
+          <div class="shot__cap"><span class="shot__n">02</span><div class="shot__txt"><div class="t">Get ready</div><div class="d">Camera, mic and a live transcript panel — candidate and AI side by side.</div></div></div>
+        </div>
+        <div class="shot-wrap" data-reveal>
+          <div class="shot tilt"><img src="assets/live.png" alt="Live conversation" /></div>
+          <div class="shot__cap"><span class="shot__n">03</span><div class="shot__txt"><div class="t">Live conversation</div><div class="d">A real-time transcript captures every exchange while recording runs.</div></div></div>
+        </div>
+        <div class="shot-wrap" data-reveal data-delay="1">
+          <div class="shot tilt"><img src="assets/completed.png" alt="Quiet grading" /></div>
+          <div class="shot__cap"><span class="shot__n">04</span><div class="shot__txt"><div class="t">Quiet grading</div><div class="d">The candidate sees a thank-you; the recruiter privately receives the benchmarked score.</div></div></div>
+        </div>
+      </div>
+      <div class="track__cta" data-reveal><a class="track-btn" href="https://www.figma.com/proto/lDOtwiMufC7UZDHiNh5jnk/AI-Design?node-id=1120-16942&amp;p=f&amp;viewport=1808%2C1820%2C0.03&amp;t=E2FOJDc4wQawDpXF-1&amp;scaling=min-zoom&amp;content-scaling=fixed&amp;starting-point-node-id=1118%3A16870&amp;page-id=0%3A1" target="_blank" rel="noopener">See the candidate prototype <span>→</span></a></div>
+    </div>
+
+    <div class="track is-hr">
+      <div class="track__head" data-reveal>
+        <div class="track__badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7.5" width="18" height="12.5" rx="2.4"></rect><path d="M9 7.5V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1.5M3 12.6h18"></path></svg></div>
+        <div class="track__meta"><div class="track__tag">HR — recruiter</div><h3 class="track__t">Recruiter dashboard</h3><p class="track__d">Where the recruiter creates interviews, shares candidate links and reads benchmarked reports.</p></div>
+        <div class="track__count">06 screens</div>
+      </div>
+      <div class="shots">
+        <div class="shot-wrap" data-reveal>
+          <div class="shot tilt"><img src="uploads/adibot-ph-hr-dashboard.png" alt="Recruiter home" /></div>
+          <div class="shot__cap"><span class="shot__n">01</span><div class="shot__txt"><div class="t">Recruiter home</div><div class="d">Live counts of total, passed and not-passed interviews, plus the top five scoring candidates at a glance.</div></div></div>
+        </div>
+        <div class="shot-wrap" data-reveal data-delay="1">
+          <div class="shot tilt"><img src="uploads/adibot-ph-hr-report.png" alt="Candidate report" /></div>
+          <div class="shot__cap"><span class="shot__n">02</span><div class="shot__txt"><div class="t">Candidate report</div><div class="d">Scores per competency, an AI written summary, a recommendation, and the interview recording in one panel.</div></div></div>
+        </div>
+        <div class="shot-wrap" data-reveal>
+          <div class="shot tilt"><img src="uploads/adibot-ph-hr-create.png" alt="Create new interview" /></div>
+          <div class="shot__cap"><span class="shot__n">03</span><div class="shot__txt"><div class="t">Create new interview</div><div class="d">One form sets candidate, role, duration, date and language — then AdiBot generates the question set.</div></div></div>
+        </div>
+        <div class="shot-wrap" data-reveal data-delay="1">
+          <div class="shot tilt"><img src="uploads/adibot-ph-hr-ready.png" alt="Interview link ready" /></div>
+          <div class="shot__cap"><span class="shot__n">04</span><div class="shot__txt"><div class="t">Interview link ready</div><div class="d">A shareable candidate link with the session summary, sendable straight over email or WhatsApp.</div></div></div>
+        </div>
+        <div class="shot-wrap" data-reveal>
+          <div class="shot tilt"><img src="uploads/adibot-ph-hr-menu.png" alt="Menu navigation" /></div>
+          <div class="shot__cap"><span class="shot__n">05</span><div class="shot__txt"><div class="t">Menu navigation</div><div class="d">A full-bleed overlay menu keeps the three core destinations reachable from anywhere.</div></div></div>
+        </div>
+        <div class="shot-wrap" data-reveal data-delay="1">
+          <div class="shot tilt"><img src="uploads/adibot-ph-hr-today.png" alt="Today's interviews" /></div>
+          <div class="shot__cap"><span class="shot__n">06</span><div class="shot__txt"><div class="t">Today's interviews</div><div class="d">Scheduled sessions, upcoming invites and a scrollable history of graded reports side by side.</div></div></div>
+        </div>
+      </div>
+      <div class="track__cta" data-reveal><a class="track-btn" href="https://www.figma.com/proto/lDOtwiMufC7UZDHiNh5jnk/AI-Design?node-id=676-18950&amp;p=f&amp;viewport=1808%2C1820%2C0.03&amp;t=E2FOJDc4wQawDpXF-1&amp;scaling=min-zoom&amp;content-scaling=fixed&amp;starting-point-node-id=676%3A18308&amp;page-id=0%3A1" target="_blank" rel="noopener">See the recruiter prototype <span>→</span></a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== USABILITY ===================== -->
+<section class="section">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="kicker">07 — Test</span>
+      <h2 class="h-section">Usability Testing</h2>
+      <p class="h-sub">To check flow clarity and spot friction, I had recruiters and candidates run through the prototype end to end.</p>
+    </div>
+
+    <div class="crit" style="margin-bottom:18px">
+      <div class="crit__card" data-reveal>
+        <h3><span class="num">Group 1</span> Recruiters</h3>
+        <ol>
+          <li>HR recruiter, actively screening candidates</li>
+          <li>Works at a company of 50–500 people</li>
+          <li>Runs 5+ first-round interviews per week</li>
+          <li>Has tried an ATS or hiring tool before</li>
+        </ol>
+      </div>
+      <div class="crit__card" data-reveal data-delay="1">
+        <h3><span class="num">Group 2</span> Candidates</h3>
+        <ol>
+          <li>Job candidate, aged 21–35</li>
+          <li>Has done at least one online interview</li>
+          <li>Comfortable with camera &amp; mic on web</li>
+          <li>Never used an AI interviewer before</li>
+        </ol>
+      </div>
+      <div class="crit__card scenario" data-reveal>
+        <h3><span class="num">Scenario</span></h3>
+        <p>Recruiters set up a role and reviewed two graded interviews. Candidates received an invite, granted permissions, completed the AI interview, and reached the completion screen — then answered a few questions about the experience.</p>
+      </div>
+    </div>
+
+    <div class="metrics" style="margin-top:30px">
+      <div class="metric" data-reveal><div class="metric__big"><span data-count="90" data-suffix="%">0</span></div><div class="metric__lab">of candidates completed the interview without help</div></div>
+      <div class="metric" data-reveal data-delay="1"><div class="metric__big"><span data-count="63" data-prefix="−" data-suffix="%">0</span></div><div class="metric__lab">recruiter time spent on first-round screening</div></div>
+      <div class="metric" data-reveal data-delay="2"><div class="metric__big"><span data-count="2">0</span></div><div class="metric__lab">fixes shipped: clearer permission prompt &amp; a recording timer</div></div>
+      <div class="metric" data-reveal data-delay="3"><div class="metric__big"><span data-count="4.6">0</span></div><div class="metric__lab">average ease-of-use rating out of 5 from testers</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== NEXT PROJECT ===================== -->
+<section style="position:relative;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#F3F2FA;">
+  <style>@keyframes ab-np-scroll{to{transform:translateX(-50%)}}</style>
+  <div style="position:absolute;top:50%;left:0;right:0;transform:translateY(-50%);overflow:hidden;white-space:nowrap;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);" aria-hidden="true">
+    <div style="display:inline-block;white-space:nowrap;font-family:'Space Grotesk',sans-serif;font-size:clamp(72px,13vw,188px);font-weight:700;line-height:1;letter-spacing:-.025em;color:#0F172A;animation:ab-np-scroll 30s linear infinite;">
+      <span>Next Project&nbsp;&nbsp;•&nbsp;&nbsp;</span><span>Next Project&nbsp;&nbsp;•&nbsp;&nbsp;</span><span>Next Project&nbsp;&nbsp;•&nbsp;&nbsp;</span><span>Next Project&nbsp;&nbsp;•&nbsp;&nbsp;</span><span>Next Project&nbsp;&nbsp;•&nbsp;&nbsp;</span><span>Next Project&nbsp;&nbsp;•&nbsp;&nbsp;</span><span>Next Project&nbsp;&nbsp;•&nbsp;&nbsp;</span><span>Next Project&nbsp;&nbsp;•&nbsp;&nbsp;</span><span>Next Project&nbsp;&nbsp;•&nbsp;&nbsp;</span><span>Next Project&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+    </div>
+  </div>
+  <a href="Perjalanan Dinas - Case Study.html" class="np-link" style="position:relative;z-index:2;width:min(820px,60vw);aspect-ratio:16/10;max-height:62vh;filter:drop-shadow(0 36px 60px rgba(0,0,0,.18));display:block;border-radius:16px;overflow:hidden;background:#0E2350 url('uploads/Screenshot 2026-07-15 at 14.13.49.png') center/cover;cursor:pointer;transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s;">
+    <img src="uploads/Homepage Perdin-aae5227e.png" alt="Next project — Business Travel" style="display:block;width:100%;height:100%;object-fit:contain;border-radius:16px;">
+  </a>
+  <style>.np-link:hover{transform:translateY(-6px) scale(1.02) !important;box-shadow:0 40px 80px -30px rgba(0,0,0,.4) !important;}</style>
+</section>
+
+<!-- ===================== CONTACT ===================== -->
+<section id="contact" style="min-height:80vh;display:flex;flex-direction:column;justify-content:center;background:#111111;padding:clamp(60px,10vw,130px) clamp(20px,5vw,84px);">
+  <div style="max-width:1200px;margin:0 auto;width:100%">
+    <p style="font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:36px;">Let's work together</p>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(56px,11vw,140px);line-height:.9;letter-spacing:-.035em;color:#fff;margin-bottom:52px;">Have an<br/><span style="color:#8B6DFF;">idea?</span></h2>
+    <a href="mailto:thomaschristian2207@gmail.com" style="display:inline-block;font-weight:500;font-size:clamp(16px,2.4vw,28px);color:rgba(255,255,255,.7);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:6px;margin-bottom:60px;">thomaschristian2207@gmail.com ↗</a>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;">
+      <a href="#" style="font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.7);text-decoration:none;border:1px solid rgba(255,255,255,.2);padding:13px 24px;border-radius:100px;transition:background .3s,color .3s;">LinkedIn ↗</a>
+      <a href="#" style="font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.7);text-decoration:none;border:1px solid rgba(255,255,255,.2);padding:13px 24px;border-radius:100px;transition:background .3s,color .3s;">Behance ↗</a>
+      <a href="#" style="font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.7);text-decoration:none;border:1px solid rgba(255,255,255,.2);padding:13px 24px;border-radius:100px;transition:background .3s,color .3s;">Instagram ↗</a>
+    </div>
+  </div>
+</section>
+<div style="background:#111111;border-top:1px solid rgba(255,255,255,.06);padding:16px clamp(20px,5vw,84px);color:rgba(255,255,255,.18);font-size:12px;">© 2025 Thomas Christian Haeryono · AdiBot AI Interview Platform — a case study</div>
+
+<style>#contact a[href="#"]{transition:background .3s,color .3s,border-color .3s}#contact a[href="#"]:hover{background:rgba(255,255,255,.1);color:#fff!important;border-color:rgba(255,255,255,.45)!important}</style>
+<a href="index.html" style="position:fixed;bottom:24px;left:24px;z-index:200;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#fff;text-decoration:none;padding:10px 18px;background:#8B6DFF;border-radius:100px;box-shadow:0 4px 16px rgba(139,109,255,.35);">← Back to Home</a>
+<button onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top" style="position:fixed;bottom:24px;right:24px;z-index:200;width:52px;height:52px;border-radius:50%;background:#8B6DFF;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 0 24px rgba(139,109,255,.55),0 4px 16px rgba(139,109,255,.35);transition:transform .2s ease;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="M6 11l6-6 6 6"/></svg>
+</button>
+<script src="script.js"></script>
+</body>
+</html>
