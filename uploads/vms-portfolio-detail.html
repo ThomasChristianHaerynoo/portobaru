@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>VMS — Visitor Management System · PT SMI</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0B2D5E;
+    --navy-mid: #1A4580;
+    --navy-light: #2C5FA8;
+    --teal: #00887A;
+    --teal-light: #00B09B;
+    --teal-pale: #E0F4F2;
+    --mint: #D4F0EC;
+    --gold: #F5A623;
+    --white: #FFFFFF;
+    --off-white: #F8FAFB;
+    --gray-100: #F0F4F7;
+    --gray-200: #E2E8F0;
+    --gray-400: #94A3B8;
+    --gray-600: #64748B;
+    --gray-800: #334155;
+    --text-dark: #0F172A;
+    --text-body: #374151;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--white);
+    color: var(--text-body);
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--navy);
+    color: white;
+    padding: 80px 0 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 40px,
+      rgba(255,255,255,0.015) 40px,
+      rgba(255,255,255,0.015) 80px
+    );
+  }
+  .hero-inner {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 0 32px;
+    position: relative;
+  }
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--teal-light);
+    margin-bottom: 20px;
+    background: rgba(0,176,155,0.12);
+    padding: 6px 14px;
+    border-radius: 100px;
+    border: 1px solid rgba(0,176,155,0.25);
+  }
+  .hero-title {
+    font-size: clamp(34px, 5vw, 56px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+  .hero-title span { color: var(--teal-light); }
+  .hero-desc {
+    font-size: 16px;
+    color: rgba(255,255,255,0.72);
+    max-width: 560px;
+    line-height: 1.75;
+    margin-bottom: 36px;
+  }
+  .hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .tag {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 5px 14px;
+    border-radius: 100px;
+    border: 1px solid rgba(255,255,255,0.18);
+    color: rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.06);
+  }
+
+  /* ── MARQUEE ── */
+  .marquee-wrap {
+    background: var(--teal);
+    overflow: hidden;
+    padding: 12px 0;
+    white-space: nowrap;
+  }
+  .marquee-track {
+    display: inline-flex;
+    animation: marquee 22s linear infinite;
+  }
+  .marquee-track span {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: white;
+    padding: 0 28px;
+    opacity: 0.9;
+  }
+  .marquee-track span.sep {
+    color: var(--mint);
+    opacity: 0.6;
+    padding: 0;
+    font-size: 10px;
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ── META ROW ── */
+  .meta-row {
+    background: var(--navy);
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .meta-inner {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 20px 32px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+  .meta-item label {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 4px;
+  }
+  .meta-item span {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.85);
+  }
+
+  /* ── SECTIONS ── */
+  .section {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 80px 32px;
+  }
+
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 16px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--gray-200);
+  }
+
+  .section-title {
+    font-size: clamp(22px, 3vw, 30px);
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    margin-bottom: 12px;
+  }
+  .section-body {
+    font-size: 14.5px;
+    color: var(--gray-600);
+    line-height: 1.8;
+    max-width: 680px;
+    margin-bottom: 40px;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px;
+    background: var(--gray-200);
+  }
+
+  /* ── DESIGN PROCESS ── */
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+    margin-top: 32px;
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .process-step {
+    padding: 24px 18px;
+    border-right: 1px solid var(--gray-200);
+    position: relative;
+  }
+  .process-step:last-child { border-right: none; }
+  .process-step.active {
+    background: var(--teal);
+    color: white;
+  }
+  .step-num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--gray-400);
+    margin-bottom: 10px;
+  }
+  .process-step.active .step-num { color: rgba(255,255,255,0.6); }
+  .step-icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .step-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+  }
+  .process-step.active .step-name { color: white; }
+  .step-desc {
+    font-size: 11.5px;
+    color: var(--gray-600);
+    margin-top: 6px;
+    line-height: 1.6;
+  }
+  .process-step.active .step-desc { color: rgba(255,255,255,0.78); }
+
+  /* ── OVERVIEW BRIEF ── */
+  .brief-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 8px;
+  }
+  .brief-card {
+    background: var(--gray-100);
+    border-radius: 12px;
+    padding: 24px 28px;
+  }
+  .brief-card h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .brief-card p {
+    font-size: 13.5px;
+    color: var(--gray-600);
+    line-height: 1.75;
+  }
+
+  /* ── VISITOR TYPES ── */
+  .visitor-types {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 8px;
+  }
+  .vtype-card {
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    padding: 24px 20px;
+    text-align: center;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .vtype-card:hover {
+    border-color: var(--teal);
+    box-shadow: 0 4px 20px rgba(0,136,122,0.1);
+  }
+  .vtype-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 14px;
+    font-size: 22px;
+  }
+  .vtype-icon.tamu { background: #E0F4F2; color: var(--teal); }
+  .vtype-icon.project { background: #EBF2FF; color: #2C5FA8; }
+  .vtype-icon.konsultan { background: #FEF3E2; color: #C07410; }
+  .vtype-icon.magang { background: #F0EBFF; color: #6644BB; }
+  .vtype-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+  .vtype-desc {
+    font-size: 11.5px;
+    color: var(--gray-600);
+    line-height: 1.6;
+  }
+
+  /* ── RESEARCH OBJECTIVES ── */
+  .research-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .research-item {
+    display: flex;
+    gap: 14px;
+    padding: 20px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    align-items: flex-start;
+  }
+  .research-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: var(--navy);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .research-text {
+    font-size: 13.5px;
+    color: var(--gray-800);
+    line-height: 1.65;
+  }
+
+  /* ── "WHAT DO USERS THINK" ── */
+  .hmw-banner {
+    background: var(--navy);
+    border-radius: 16px;
+    padding: 40px 44px;
+    margin: 32px 0;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+  .hmw-question {
+    flex: 1;
+    font-size: 22px;
+    font-weight: 700;
+    color: white;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+  }
+  .hmw-question em {
+    color: var(--teal-light);
+    font-style: normal;
+  }
+  .pain-chips {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .pain-chip {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.8);
+    white-space: nowrap;
+  }
+
+  /* ── STICKY NOTES (AFFINITY) ── */
+  .sticky-cluster {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 8px;
+  }
+  .sticky {
+    width: 160px;
+    min-height: 100px;
+    border-radius: 3px 3px 3px 3px;
+    padding: 14px 16px;
+    font-size: 12px;
+    line-height: 1.55;
+    font-weight: 500;
+    box-shadow: 2px 4px 12px rgba(0,0,0,0.10);
+    position: relative;
+  }
+  .sticky::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    right: 8px;
+    width: 0; height: 0;
+    border-left: 8px solid transparent;
+  }
+  .sticky.yellow { background: #FFF176; color: #3A3000; }
+  .sticky.green  { background: #B9F6CA; color: #0A3D1A; }
+  .sticky.blue   { background: #BBDEFB; color: #0A2744; }
+  .sticky.pink   { background: #FCE4EC; color: #4A0014; }
+  .sticky.orange { background: #FFE0B2; color: #402000; }
+  .sticky-category {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.55;
+    margin-bottom: 6px;
+  }
+
+  /* ── HMW CARDS ── */
+  .hmw-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .hmw-card {
+    background: var(--navy);
+    border-radius: 12px;
+    padding: 24px 22px;
+    color: white;
+  }
+  .hmw-card-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--teal-light);
+    margin-bottom: 10px;
+  }
+  .hmw-card-text {
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.88);
+    font-style: italic;
+  }
+
+  /* ── USER FLOW ── */
+  .flow-diagram {
+    background: var(--gray-100);
+    border-radius: 14px;
+    padding: 32px;
+    overflow-x: auto;
+  }
+  .flow-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+    margin-bottom: 12px;
+  }
+  .flow-row:last-child { margin-bottom: 0; }
+  .flow-node {
+    background: white;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--navy);
+    white-space: nowrap;
+  }
+  .flow-node.start {
+    background: var(--navy);
+    color: white;
+    border-color: var(--navy);
+    border-radius: 100px;
+  }
+  .flow-node.end {
+    background: var(--teal);
+    color: white;
+    border-color: var(--teal);
+    border-radius: 100px;
+  }
+  .flow-node.decision {
+    background: #FEF3E2;
+    border-color: #F5A623;
+    color: #8A5500;
+    clip-path: polygon(8px 0%, calc(100% - 8px) 0%, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0% 50%);
+    padding: 8px 20px;
+  }
+  .flow-arrow {
+    font-size: 16px;
+    color: var(--gray-400);
+    flex-shrink: 0;
+  }
+  .flow-role {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gray-400);
+    width: 80px;
+    flex-shrink: 0;
+  }
+
+  /* ── WIREFRAME / SKETCH ── */
+  .frames-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 8px;
+  }
+  .frame-card {
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .frame-img {
+    background: var(--gray-100);
+    aspect-ratio: 9/16;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .frame-label {
+    padding: 10px 14px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--gray-600);
+    background: white;
+    text-align: center;
+  }
+
+  /* Mobile frame SVG placeholder */
+  .wf-screen {
+    width: 100%;
+    height: 100%;
+    padding: 8px;
+  }
+
+  /* ── UI DESIGN KIT ── */
+  .kit-section {
+    margin-bottom: 32px;
+  }
+  .kit-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray-400);
+    margin-bottom: 14px;
+  }
+  .color-swatches {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .swatch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .swatch-block {
+    width: 52px;
+    height: 52px;
+    border-radius: 10px;
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+  .swatch-name {
+    font-size: 10.5px;
+    color: var(--gray-600);
+    font-weight: 500;
+  }
+  .swatch-hex {
+    font-size: 9.5px;
+    color: var(--gray-400);
+    font-family: monospace;
+  }
+  .type-samples {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .type-samples span {
+    color: var(--navy);
+    font-family: 'Poppins', sans-serif;
+  }
+  .component-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+  .c-btn-primary {
+    background: var(--teal);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+  }
+  .c-btn-secondary {
+    background: white;
+    color: var(--navy);
+    border: 1.5px solid var(--navy);
+    border-radius: 8px;
+    padding: 9px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+  }
+  .c-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 100px;
+  }
+  .c-badge.tamu { background: var(--teal-pale); color: var(--teal); }
+  .c-badge.project { background: #EBF2FF; color: #1A4580; }
+  .c-badge.konsultan { background: #FEF3E2; color: #8A5500; }
+  .c-badge.magang { background: #F0EBFF; color: #5533AA; }
+  .c-badge.aktif { background: #E6F9F0; color: #1A7A4D; }
+  .c-badge.proses { background: #FFF8E0; color: #AA7700; }
+  .c-badge.selesai { background: #F0F4F7; color: #5A6A80; }
+
+  /* ── HI-FI ── */
+  .hifi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 8px;
+  }
+  .hifi-card {
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 16px rgba(11,45,94,0.07);
+  }
+  .hifi-screen {
+    aspect-ratio: 9/16;
+    overflow: hidden;
+    position: relative;
+  }
+  .hifi-label {
+    padding: 10px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-600);
+    background: var(--white);
+    text-align: center;
+    border-top: 1px solid var(--gray-200);
+  }
+
+  /* ── USABILITY TEST ── */
+  .test-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .test-metric {
+    background: var(--gray-100);
+    border-radius: 12px;
+    padding: 24px 22px;
+    text-align: center;
+  }
+  .metric-val {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .metric-val .unit { font-size: 20px; }
+  .metric-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-600);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+  }
+  .metric-note {
+    font-size: 11.5px;
+    color: var(--gray-400);
+  }
+  .insight-list {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .insight-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 14px 18px;
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    background: white;
+  }
+  .insight-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+  .insight-icon.good { background: #E6F9F0; color: #1A7A4D; }
+  .insight-icon.bad  { background: #FEE2E2; color: #B91C1C; }
+  .insight-text { font-size: 13.5px; color: var(--gray-800); line-height: 1.6; }
+
+  /* ── NEXT PROJECT ── */
+  .next-section {
+    background: var(--navy);
+    padding: 64px 32px;
+    text-align: center;
+    margin-top: 60px;
+  }
+  .next-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 12px;
+  }
+  .next-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 24px;
+  }
+  .next-title span { color: var(--teal-light); }
+  .next-btn {
+    display: inline-block;
+    background: var(--teal);
+    color: white;
+    text-decoration: none;
+    padding: 13px 32px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    transition: background 0.2s;
+  }
+  .next-btn:hover { background: var(--teal-light); }
+
+  /* ── COMPETITIVE TABLE ── */
+  .comp-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+    font-size: 13px;
+  }
+  .comp-table th {
+    background: var(--navy);
+    color: rgba(255,255,255,0.88);
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .comp-table th:first-child { border-radius: 8px 0 0 0; }
+  .comp-table th:last-child { border-radius: 0 8px 0 0; }
+  .comp-table td {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--gray-200);
+    color: var(--gray-800);
+    vertical-align: middle;
+  }
+  .comp-table tr:last-child td { border-bottom: none; }
+  .comp-table tr:nth-child(even) td { background: var(--gray-100); }
+  .comp-table .highlight td { background: var(--teal-pale) !important; font-weight: 600; }
+  .check { color: var(--teal); font-size: 16px; }
+  .cross { color: #E53E3E; font-size: 16px; }
+  .partial { color: var(--gold); font-size: 14px; }
+
+  /* SECTION BG ALT */
+  .section-alt { background: var(--off-white); padding: 80px 0; }
+  .section-alt .section { padding: 0 32px; }
+
+  @media (max-width: 640px) {
+    .process-steps { grid-template-columns: 1fr 1fr; }
+    .visitor-types { grid-template-columns: 1fr 1fr; }
+    .research-grid { grid-template-columns: 1fr; }
+    .hmw-banner { flex-direction: column; }
+    .hmw-cards { grid-template-columns: 1fr; }
+    .frames-row { grid-template-columns: 1fr 1fr; }
+    .test-grid { grid-template-columns: 1fr 1fr; }
+    .meta-inner { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">UI/UX Case Study · PT Sarana Multi Infrastruktur</div>
+    <h1 class="hero-title">Visitor Management<br/><span>System</span></h1>
+    <p class="hero-desc">
+      Merancang ulang pengalaman pengelolaan kunjungan di PT SMI — dari tamu biasa, proyek, konsultan, hingga magang — menjadi satu platform terpadu yang efisien dan mudah digunakan.
+    </p>
+    <div class="hero-tags">
+      <span class="tag">UX Research</span>
+      <span class="tag">UI Design</span>
+      <span class="tag">Enterprise Web App</span>
+      <span class="tag">Internal System</span>
+      <span class="tag">Figma</span>
+      <span class="tag">2024</span>
+    </div>
+  </div>
+</section>
+
+<!-- META -->
+<div class="meta-row">
+  <div class="meta-inner">
+    <div class="meta-item"><label>Peran</label><span>UI/UX Designer</span></div>
+    <div class="meta-item"><label>Durasi</label><span>3 Bulan</span></div>
+    <div class="meta-item"><label>Platform</label><span>Web App (Desktop)</span></div>
+    <div class="meta-item"><label>Tools</label><span>Figma, FigJam, Maze</span></div>
+  </div>
+</div>
+
+<!-- ── MARQUEE ── -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>Pre-Registration</span><span class="sep">✦</span>
+    <span>Tamu Umum</span><span class="sep">✦</span>
+    <span>Jadwal Meeting</span><span class="sep">✦</span>
+    <span>Konsultan</span><span class="sep">✦</span>
+    <span>Magang</span><span class="sep">✦</span>
+    <span>Kunjungan Proyek</span><span class="sep">✦</span>
+    <span>Approval Flow</span><span class="sep">✦</span>
+    <span>PT SMI</span><span class="sep">✦</span>
+    <span>Pre-Registration</span><span class="sep">✦</span>
+    <span>Tamu Umum</span><span class="sep">✦</span>
+    <span>Jadwal Meeting</span><span class="sep">✦</span>
+    <span>Konsultan</span><span class="sep">✦</span>
+    <span>Magang</span><span class="sep">✦</span>
+    <span>Kunjungan Proyek</span><span class="sep">✦</span>
+    <span>Approval Flow</span><span class="sep">✦</span>
+    <span>PT SMI</span><span class="sep">✦</span>
+  </div>
+</div>
+
+<!-- ── OVERVIEW ── -->
+<div class="section">
+  <div class="section-label">Overview</div>
+  <h2 class="section-title">Daftar kunjungan dari mana saja, jauh sebelum hari H</h2>
+  <p class="section-body">
+    Sebelum VMS, tamu PT SMI tidak punya cara untuk mendaftarkan kunjungan terlebih dahulu. Semua proses baru dimulai saat tamu sudah ada di lobi — konfirmasi ke karyawan lewat WhatsApp, isi buku tamu fisik, dan menunggu tanpa kepastian. VMS mengubah ini: tamu bisa pre-register, pilih karyawan SMI yang dituju, dan jadwalkan waktu pertemuan, semua dari jauh hari.
+  </p>
+  <div class="brief-grid">
+    <div class="brief-card">
+      <h4>🎯 Problem</h4>
+      <p>Tidak ada sistem untuk mendaftarkan kunjungan sebelum hari H. Tamu tiba tanpa persiapan, karyawan tidak siap menerima, dan admin kewalahan memproses secara manual di lobi.</p>
+    </div>
+    <div class="brief-card">
+      <h4>💡 Solusi</h4>
+      <p>Platform pre-registration berbasis web: tamu daftar online, pilih karyawan SMI yang dituju, tentukan jadwal — lalu sistem mengurus notifikasi, approval, dan check-in otomatis.</p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ── VISITOR TYPES ── -->
+<div class="section">
+  <div class="section-label">Scope</div>
+  <h2 class="section-title">4 tipe kunjungan dalam satu platform</h2>
+  <p class="section-body">VMS dirancang untuk empat kategori kunjungan, masing-masing dengan alur pre-registration, approval, dan check-in yang disesuaikan kebutuhannya.</p>
+  <div class="visitor-types">
+    <div class="vtype-card">
+      <div class="vtype-icon tamu">🧑‍💼</div>
+      <div class="vtype-name">Tamu Umum</div>
+      <div class="vtype-desc">Pengunjung eksternal yang mendaftar online, memilih karyawan SMI yang dituju, dan menjadwalkan waktu pertemuan.</div>
+    </div>
+    <div class="vtype-card">
+      <div class="vtype-icon project">🏗️</div>
+      <div class="vtype-name">Kunjungan Proyek</div>
+      <div class="vtype-desc">Tim mitra atau vendor yang pre-register untuk kunjungan terkait proyek infrastruktur, lengkap dengan dokumen pendukung.</div>
+    </div>
+    <div class="vtype-card">
+      <div class="vtype-icon konsultan">📋</div>
+      <div class="vtype-name">Konsultan</div>
+      <div class="vtype-desc">Tenaga ahli eksternal berdasarkan kontrak aktif — cukup daftar sekali, kunjungan berikutnya otomatis terisi dari data yang tersimpan.</div>
+    </div>
+    <div class="vtype-card">
+      <div class="vtype-icon magang">🎓</div>
+      <div class="vtype-name">Magang</div>
+      <div class="vtype-desc">Peserta program magang mendaftar dengan data lengkap sejak awal — periode, divisi, dan pembimbing tercatat di sistem.</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ── DESIGN PROCESS ── -->
+<div class="section">
+  <div class="section-label">Design Process</div>
+  <h2 class="section-title">Double Diamond — dari masalah ke solusi</h2>
+  <p class="section-body">Proses desain mengikuti metodologi Double Diamond, memastikan solusi berakar pada riset nyata, bukan asumsi.</p>
+  <div class="process-steps">
+    <div class="process-step">
+      <div class="step-num">01</div>
+      <div class="step-icon">🔍</div>
+      <div class="step-name">Discover</div>
+      <div class="step-desc">Wawancara pengguna, observasi alur check-in, review sistem lama</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">02</div>
+      <div class="step-icon">🧩</div>
+      <div class="step-name">Define</div>
+      <div class="step-desc">Affinity mapping, HMW questions, problem statement</div>
+    </div>
+    <div class="process-step active">
+      <div class="step-num">03</div>
+      <div class="step-icon">💡</div>
+      <div class="step-name">Ideate</div>
+      <div class="step-desc">User flow, sketching, rapid wireframing alternatif</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">04</div>
+      <div class="step-icon">🛠️</div>
+      <div class="step-name">Prototype</div>
+      <div class="step-desc">Hi-fi prototype di Figma, design system, konten real</div>
+    </div>
+    <div class="process-step">
+      <div class="step-num">05</div>
+      <div class="step-icon">🧪</div>
+      <div class="step-name">Test</div>
+      <div class="step-desc">Usability testing dengan 8 peserta, iterasi berdasarkan temuan</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-alt">
+<div class="section" style="padding-top:0;padding-bottom:0;">
+
+  <!-- ── RESEARCH OBJECTIVES ── -->
+  <div class="section-label">Research Objectives</div>
+  <h2 class="section-title">Apa yang ingin kita pahami?</h2>
+  <p class="section-body">Riset berfokus pada tamu eksternal, karyawan penerima tamu, petugas front desk, dan admin divisi.</p>
+  <div class="research-grid">
+    <div class="research-item">
+      <div class="research-num">1</div>
+      <div class="research-text">Bagaimana tamu saat ini mengatur jadwal kunjungan ke PT SMI dan apa yang membuat prosesnya tidak mulus?</div>
+    </div>
+    <div class="research-item">
+      <div class="research-num">2</div>
+      <div class="research-text">Informasi apa saja yang dibutuhkan tamu sebelum datang agar mereka bisa tiba dengan persiapan yang cukup?</div>
+    </div>
+    <div class="research-item">
+      <div class="research-num">3</div>
+      <div class="research-text">Bagaimana proses approval kunjungan yang dijalankan saat ini?</div>
+    </div>
+    <div class="research-item">
+      <div class="research-num">4</div>
+      <div class="research-text">Seberapa jauh sebelum hari H seorang tamu biasanya mengonfirmasi kunjungan, dan lewat kanal apa?</div>
+    </div>
+    <div class="research-item">
+      <div class="research-num">5</div>
+      <div class="research-text">Apa perbedaan kebutuhan antara tamu yang baru pertama kali datang vs. konsultan dan peserta magang yang rutin hadir?</div>
+    </div>
+    <div class="research-item">
+      <div class="research-num">6</div>
+      <div class="research-text">Notifikasi seperti apa yang diharapkan karyawan penerima tamu terima, dan melalui kanal apa?</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ── WHAT DO USERS THINK ── -->
+<div class="section">
+  <div class="section-label">User Insights</div>
+  <h2 class="section-title">Apa yang sebenarnya dirasakan pengguna?</h2>
+
+  <div class="hmw-banner">
+    <div class="hmw-question">
+      "Gue udah WA duluan bilang mau datang, tapi pas nyampe lobi tetap disuruh <em>isi ulang</em> semua data dari awal."
+    </div>
+    <div class="pain-chips">
+      <div class="pain-chip">📅 Tidak ada sistem janji temu</div>
+      <div class="pain-chip">🔄 Data diisi ulang setiap kunjungan</div>
+      <div class="pain-chip">🔔 Karyawan tidak tahu tamu sudah tiba</div>
+      <div class="pain-chip">⏱ Waktu tunggu tidak terprediksi</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ── AFFINITY MAPPING ── -->
+<div class="section-alt">
+<div class="section" style="padding-top:0;padding-bottom:0;">
+  <div class="section-label">Affinity Mapping</div>
+  <h2 class="section-title">Mengelompokkan temuan dari lapangan</h2>
+  <p class="section-body">Hasil wawancara dengan 12 partisipan (petugas keamanan, admin, manajer divisi) dikelompokkan ke dalam 5 tema utama.</p>
+  <div class="sticky-cluster">
+    <div class="sticky yellow">
+      <div class="sticky-category">Komunikasi</div>
+      Tamu mengonfirmasi kedatangan via WA pribadi ke karyawan, tidak ada rekam jejak resmi
+    </div>
+    <div class="sticky yellow">
+      <div class="sticky-category">Komunikasi</div>
+      Karyawan lupa ada tamu yang datang karena konfirmasi WA tertimbun pesan lain
+    </div>
+    <div class="sticky green">
+      <div class="sticky-category">Data & Administrasi</div>
+      Tamu mengisi data yang sama berulang kali di setiap kunjungan berikutnya
+    </div>
+    <div class="sticky green">
+      <div class="sticky-category">Data & Administrasi</div>
+      Data magang tersimpan di berbagai spreadsheet yang tidak sinkron
+    </div>
+    <div class="sticky blue">
+      <div class="sticky-category">Alur Approval</div>
+      Konsultan perlu di-approve tiap hari meski sudah ada kontrak aktif
+    </div>
+    <div class="sticky blue">
+      <div class="sticky-category">Alur Approval</div>
+      Tidak ada bedanya alur approval tamu biasa vs kunjungan proyek strategis
+    </div>
+    <div class="sticky pink">
+      <div class="sticky-category">Keamanan</div>
+      Tidak ada cara cepat untuk memverifikasi identitas tamu yang mengaku punya janji tanpa konfirmasi ke karyawan tujuan
+    </div>
+    <div class="sticky pink">
+      <div class="sticky-category">Keamanan</div>
+      Tidak ada rekam jejak waktu masuk dan keluar yang akurat
+    </div>
+    <div class="sticky orange">
+      <div class="sticky-category">Pengalaman Tamu</div>
+      Tamu merasa tidak nyaman menunggu lama di lobi tanpa tahu kapan dijemput
+    </div>
+    <div class="sticky orange">
+      <div class="sticky-category">Pengalaman Tamu</div>
+      Proses registrasi ulang membosankan untuk konsultan yang datang tiap minggu
+    </div>
+  </div>
+</div>
+</div>
+
+
+<div class="divider"></div>
+
+<!-- ── HOW MIGHT WE ── -->
+<div class="section-alt">
+<div class="section" style="padding-top:0;padding-bottom:0;">
+  <div class="section-label">How Might We</div>
+  <h2 class="section-title">Mengubah masalah menjadi pertanyaan peluang</h2>
+  <div class="hmw-cards">
+    <div class="hmw-card">
+      <div class="hmw-card-label">Pre-Registration</div>
+      <div class="hmw-card-text">"Bagaimana kita bisa memungkinkan tamu mendaftarkan kunjungan dan memilih karyawan SMI yang dituju dari jauh hari, sebelum mereka tiba?"</div>
+    </div>
+    <div class="hmw-card">
+      <div class="hmw-card-label">Efisiensi</div>
+      <div class="hmw-card-text">"Bagaimana kita bisa membuat konsultan dan tamu berulang tidak perlu mengisi data yang sama setiap kali mereka datang?"</div>
+    </div>
+    <div class="hmw-card">
+      <div class="hmw-card-label">Pengalaman Tamu</div>
+      <div class="hmw-card-text">"Bagaimana kita bisa memberi tamu kepastian — konfirmasi digital, status approval, dan estimasi waktu tunggu — sebelum mereka berangkat?"</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ── USER FLOW ── -->
+<div class="section">
+  <div class="section-label">User Flow</div>
+  <h2 class="section-title">Alur pengguna — dari pre-registration ke check-in</h2>
+  <p class="section-body">Tamu memulai proses jauh sebelum hari H. Tiga aktor terlibat: Tamu Eksternal, Karyawan PT SMI yang dituju, dan Admin/Sistem VMS.</p>
+  <div class="flow-diagram">
+    <div class="flow-row">
+      <div class="flow-role">Tamu</div>
+      <div class="flow-node start">Buka VMS Portal</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">Isi Form & Pilih Karyawan SMI</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">Pilih Tanggal & Waktu</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">Submit Permohonan</div>
+    </div>
+    <div class="flow-row">
+      <div class="flow-role">Sistem</div>
+      <div class="flow-node" style="background:#E0F4F2;border-color:#00887A;color:#005048;">Validasi & Kirim Notifikasi</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node decision">Disetujui?</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node" style="background:#E0F4F2;border-color:#00887A;color:#005048;">Kirim Konfirmasi ke Tamu</div>
+    </div>
+    <div class="flow-row">
+      <div class="flow-role">Karyawan</div>
+      <div class="flow-node">Terima Notifikasi Permohonan</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">Approve / Tolak</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">Terima Notif Hari H</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node end">Sambut Tamu</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ── WIREFRAMES ── -->
+<div class="section-alt">
+<div class="section" style="padding-top:0;padding-bottom:0;">
+  <div class="section-label">Wireframe</div>
+  <h2 class="section-title">Lo-fi: eksplorasi struktur sebelum visual</h2>
+  <p class="section-body">Tiga layar kunci yang diiterasikan paling banyak selama fase wireframing.</p>
+  <div class="frames-row">
+    <div class="frame-card">
+      <div class="frame-img" style="background:#EDF2FF;">
+        <svg viewBox="0 0 120 200" xmlns="http://www.w3.org/2000/svg" class="wf-screen">
+          <!-- Dashboard wireframe -->
+          <rect x="6" y="6" width="108" height="14" rx="3" fill="#BFC8DA"/>
+          <rect x="6" y="24" width="50" height="8" rx="2" fill="#D0D8E8"/>
+          <rect x="60" y="24" width="54" height="8" rx="2" fill="#D0D8E8"/>
+          <rect x="6" y="36" width="50" height="8" rx="2" fill="#D0D8E8"/>
+          <rect x="60" y="36" width="54" height="8" rx="2" fill="#D0D8E8"/>
+          <rect x="6" y="50" width="50" height="8" rx="2" fill="#D0D8E8"/>
+          <rect x="60" y="50" width="54" height="8" rx="2" fill="#D0D8E8"/>
+          <rect x="6" y="64" width="108" height="1" fill="#BFC8DA"/>
+          <rect x="6" y="70" width="80" height="6" rx="2" fill="#7C8FAC"/>
+          <rect x="6" y="82" width="108" height="50" rx="4" fill="#C8D4E8"/>
+          <rect x="6" y="140" width="50" height="30" rx="4" fill="#D0D8E8"/>
+          <rect x="62" y="140" width="50" height="30" rx="4" fill="#D0D8E8"/>
+          <rect x="6" y="178" width="108" height="16" rx="4" fill="#3A5FAF" opacity="0.4"/>
+        </svg>
+      </div>
+      <div class="frame-label">Portal Pre-Registration</div>
+    </div>
+    <div class="frame-card">
+      <div class="frame-img" style="background:#EDF2FF;">
+        <svg viewBox="0 0 120 200" xmlns="http://www.w3.org/2000/svg" class="wf-screen">
+          <!-- Form registrasi wireframe -->
+          <rect x="6" y="6" width="108" height="10" rx="3" fill="#BFC8DA"/>
+          <rect x="6" y="20" width="60" height="5" rx="2" fill="#9AABB8"/>
+          <rect x="6" y="30" width="108" height="12" rx="3" fill="#D0D8E8"/>
+          <rect x="6" y="48" width="60" height="5" rx="2" fill="#9AABB8"/>
+          <rect x="6" y="58" width="108" height="12" rx="3" fill="#D0D8E8"/>
+          <rect x="6" y="76" width="60" height="5" rx="2" fill="#9AABB8"/>
+          <rect x="6" y="86" width="108" height="12" rx="3" fill="#D0D8E8"/>
+          <rect x="6" y="104" width="60" height="5" rx="2" fill="#9AABB8"/>
+          <rect x="6" y="114" width="108" height="12" rx="3" fill="#D0D8E8"/>
+          <rect x="6" y="132" width="60" height="5" rx="2" fill="#9AABB8"/>
+          <rect x="6" y="142" width="50" height="12" rx="3" fill="#D0D8E8"/>
+          <rect x="64" y="142" width="50" height="12" rx="3" fill="#D0D8E8"/>
+          <rect x="6" y="168" width="108" height="14" rx="4" fill="#2C5FA8" opacity="0.5"/>
+        </svg>
+      </div>
+      <div class="frame-label">Form Pilih Karyawan SMI</div>
+    </div>
+    <div class="frame-card">
+      <div class="frame-img" style="background:#EDF2FF;">
+        <svg viewBox="0 0 120 200" xmlns="http://www.w3.org/2000/svg" class="wf-screen">
+          <!-- Status tamu wireframe -->
+          <rect x="6" y="6" width="108" height="10" rx="3" fill="#BFC8DA"/>
+          <rect x="6" y="22" width="30" height="7" rx="12" fill="#BFC8DA"/>
+          <rect x="42" y="22" width="30" height="7" rx="12" fill="#2C5FA8" opacity="0.4"/>
+          <rect x="78" y="22" width="30" height="7" rx="12" fill="#BFC8DA"/>
+          <rect x="6" y="36" width="108" height="28" rx="5" fill="#D0D8E8"/>
+          <rect x="6" y="70" width="108" height="28" rx="5" fill="#D0D8E8"/>
+          <rect x="6" y="104" width="108" height="28" rx="5" fill="#D0D8E8"/>
+          <rect x="6" y="138" width="108" height="28" rx="5" fill="#D0D8E8"/>
+          <rect x="6" y="172" width="108" height="22" rx="4" fill="#00887A" opacity="0.35"/>
+        </svg>
+      </div>
+      <div class="frame-label">Konfirmasi & Status Kunjungan</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ── HI-FI ── -->
+<div class="section">
+  <div class="section-label">Hi-Fi Design</div>
+  <h2 class="section-title">Dari wireframe ke antarmuka final</h2>
+  <p class="section-body">Prototype hi-fi dibangun di Figma dengan konten nyata, mencerminkan sistem warna PT SMI dan komponen yang sudah disepakati bersama tim pengembang.</p>
+  <div class="hifi-grid">
+
+    <!-- Screen 1: Portal Pre-Registration Landing -->
+    <div class="hifi-card">
+      <div class="hifi-screen" style="background:#0B2D5E;">
+        <div style="padding:14px 16px 10px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:11px;font-weight:700;color:white;letter-spacing:0.04em;">VMS · PT SMI</span>
+          <span style="font-size:10px;color:rgba(255,255,255,0.45);">Portal Tamu</span>
+        </div>
+        <div style="padding:16px 16px 0;">
+          <div style="font-size:16px;font-weight:700;color:white;line-height:1.3;margin-bottom:6px;">Selamat datang di<br/>PT Sarana Multi<br/>Infrastruktur</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.5);margin-bottom:16px;line-height:1.6;">Daftarkan kunjungan Anda sebelum hari H. Pilih karyawan yang ingin Anda temui dan tentukan jadwalnya.</div>
+          <div style="background:#00887A;border-radius:8px;padding:10px;text-align:center;margin-bottom:8px;">
+            <span style="font-size:11px;font-weight:600;color:white;">+ Daftar Kunjungan Baru</span>
+          </div>
+          <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:10px;text-align:center;margin-bottom:16px;">
+            <span style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.75);">Cek Status Kunjungan</span>
+          </div>
+          <div style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Jenis Kunjungan</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+            <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:7px;padding:8px;text-align:center;">
+              <div style="font-size:16px;margin-bottom:3px;">🧑‍💼</div>
+              <div style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.65);">Tamu Umum</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:7px;padding:8px;text-align:center;">
+              <div style="font-size:16px;margin-bottom:3px;">🏗️</div>
+              <div style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.65);">Proyek</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:7px;padding:8px;text-align:center;">
+              <div style="font-size:16px;margin-bottom:3px;">📋</div>
+              <div style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.65);">Konsultan</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:7px;padding:8px;text-align:center;">
+              <div style="font-size:16px;margin-bottom:3px;">🎓</div>
+              <div style="font-size:9px;font-weight:500;color:rgba(255,255,255,0.65);">Magang</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hifi-label">Portal Pre-Registration</div>
+    </div>
+
+    <!-- Screen 2: Form Pilih Karyawan SMI (key feature) -->
+    <div class="hifi-card">
+      <div class="hifi-screen" style="background:#F8FAFB;">
+        <div style="padding:12px 14px 10px;background:#0B2D5E;display:flex;align-items:center;gap:8px;">
+          <span style="color:rgba(255,255,255,0.5);font-size:14px;">←</span>
+          <span style="font-size:11px;font-weight:600;color:white;">Daftar Kunjungan Baru</span>
+        </div>
+        <!-- Step indicator -->
+        <div style="padding:10px 14px;background:white;border-bottom:1px solid #E2E8F0;display:flex;align-items:center;gap:0;">
+          <div style="flex:1;text-align:center;">
+            <div style="width:20px;height:20px;border-radius:50%;background:#00887A;color:white;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 3px;">1</div>
+            <div style="font-size:8px;color:#00887A;font-weight:600;">Data Diri</div>
+          </div>
+          <div style="flex:1;height:1px;background:#E2E8F0;margin-bottom:10px;"></div>
+          <div style="flex:1;text-align:center;">
+            <div style="width:20px;height:20px;border-radius:50%;background:#0B2D5E;color:white;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 3px;">2</div>
+            <div style="font-size:8px;color:#0B2D5E;font-weight:700;">Pilih Tujuan</div>
+          </div>
+          <div style="flex:1;height:1px;background:#E2E8F0;margin-bottom:10px;"></div>
+          <div style="flex:1;text-align:center;">
+            <div style="width:20px;height:20px;border-radius:50%;background:#E2E8F0;color:#94A3B8;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 3px;">3</div>
+            <div style="font-size:8px;color:#94A3B8;">Jadwal</div>
+          </div>
+        </div>
+        <div style="padding:12px 14px;">
+          <!-- Highlight: cari karyawan SMI -->
+          <div style="font-size:9px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px;">Karyawan SMI yang Dituju</div>
+          <div style="background:white;border:2px solid #00887A;border-radius:8px;padding:8px 10px;margin-bottom:4px;display:flex;align-items:center;gap:6px;">
+            <span style="font-size:12px;color:#94A3B8;">🔍</span>
+            <span style="font-size:10px;color:#94A3B8;">Cari nama atau divisi…</span>
+          </div>
+          <!-- Search results -->
+          <div style="background:white;border:1px solid #E2E8F0;border-radius:8px;overflow:hidden;margin-bottom:10px;">
+            <div style="padding:8px 10px;border-bottom:1px solid #F0F4F7;display:flex;align-items:center;gap:8px;background:#E0F4F2;">
+              <div style="width:24px;height:24px;border-radius:50%;background:#00887A;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white;flex-shrink:0;">AR</div>
+              <div>
+                <div style="font-size:10px;font-weight:600;color:#0B2D5E;">Andi Rachmat</div>
+                <div style="font-size:8.5px;color:#64748B;">Div. Infrastruktur · Manager</div>
+              </div>
+              <div style="margin-left:auto;width:16px;height:16px;border-radius:50%;background:#00887A;display:flex;align-items:center;justify-content:center;"><span style="font-size:9px;color:white;">✓</span></div>
+            </div>
+            <div style="padding:8px 10px;border-bottom:1px solid #F0F4F7;display:flex;align-items:center;gap:8px;">
+              <div style="width:24px;height:24px;border-radius:50%;background:#2C5FA8;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white;flex-shrink:0;">DS</div>
+              <div>
+                <div style="font-size:10px;font-weight:600;color:#334155;">Dian Sari</div>
+                <div style="font-size:8.5px;color:#64748B;">Div. Keuangan · Staff</div>
+              </div>
+            </div>
+            <div style="padding:8px 10px;display:flex;align-items:center;gap:8px;">
+              <div style="width:24px;height:24px;border-radius:50%;background:#6644BB;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white;flex-shrink:0;">RW</div>
+              <div>
+                <div style="font-size:10px;font-weight:600;color:#334155;">Rizky Wahyu</div>
+                <div style="font-size:8.5px;color:#64748B;">Div. Risiko · Analis</div>
+              </div>
+            </div>
+          </div>
+          <div style="font-size:9px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px;">Keperluan Kunjungan</div>
+          <div style="background:white;border:1px solid #E2E8F0;border-radius:7px;padding:8px 10px;margin-bottom:10px;font-size:10px;color:#94A3B8;">Tulis keperluan singkat…</div>
+          <div style="background:#0B2D5E;border-radius:8px;padding:9px;text-align:center;">
+            <span style="font-size:11px;font-weight:600;color:white;">Lanjut ke Jadwal →</span>
+          </div>
+        </div>
+      </div>
+      <div class="hifi-label">Pilih Karyawan SMI</div>
+    </div>
+
+    <!-- Screen 3: Konfirmasi & Status -->
+    <div class="hifi-card">
+      <div class="hifi-screen" style="background:#F8FAFB;">
+        <div style="padding:12px 14px 10px;background:#0B2D5E;display:flex;align-items:center;gap:8px;">
+          <span style="color:rgba(255,255,255,0.5);font-size:14px;">←</span>
+          <span style="font-size:11px;font-weight:600;color:white;">Status Kunjungan</span>
+        </div>
+        <div style="padding:12px 14px;">
+          <!-- Status card -->
+          <div style="background:white;border:1px solid #E2E8F0;border-radius:10px;padding:14px;margin-bottom:10px;text-align:center;">
+            <div style="width:44px;height:44px;border-radius:50%;background:#FEF3E2;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:22px;">⏳</div>
+            <div style="font-size:12px;font-weight:700;color:#0B2D5E;margin-bottom:3px;">Menunggu Konfirmasi</div>
+            <div style="font-size:9.5px;color:#64748B;margin-bottom:10px;">Kunjungan Anda menunggu persetujuan dari karyawan yang dituju</div>
+            <div style="background:#FEF3E2;border-radius:100px;padding:4px 14px;display:inline-block;">
+              <span style="font-size:9.5px;font-weight:600;color:#AA7700;">Selasa, 16 Jul · 10:00 WIB</span>
+            </div>
+          </div>
+          <!-- Detail -->
+          <div style="background:white;border:1px solid #E2E8F0;border-radius:8px;padding:10px 12px;margin-bottom:10px;">
+            <div style="font-size:9px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px;">Detail Kunjungan</div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
+              <span style="font-size:9.5px;color:#94A3B8;">Tujuan</span>
+              <span style="font-size:9.5px;font-weight:600;color:#334155;">Andi Rachmat</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
+              <span style="font-size:9.5px;color:#94A3B8;">Divisi</span>
+              <span style="font-size:9.5px;font-weight:600;color:#334155;">Div. Infrastruktur</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
+              <span style="font-size:9.5px;color:#94A3B8;">Jenis</span>
+              <span style="font-size:9px;font-weight:600;background:#E0F4F2;color:#00887A;padding:2px 8px;border-radius:100px;">Tamu Umum</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;">
+              <span style="font-size:9.5px;color:#94A3B8;">No. Registrasi</span>
+              <span style="font-size:9.5px;font-weight:600;color:#334155;font-family:monospace;">VMS-2024-0847</span>
+            </div>
+          </div>
+          <div style="background:#F0F4F7;border-radius:8px;padding:10px 12px;display:flex;align-items:flex-start;gap:7px;">
+            <span style="font-size:13px;">💡</span>
+            <div style="font-size:9.5px;color:#64748B;line-height:1.5;">Anda akan mendapat notifikasi email dan SMS begitu kunjungan disetujui.</div>
+          </div>
+        </div>
+      </div>
+      <div class="hifi-label">Konfirmasi & Status</div>
+    </div>
+
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ── UI DESIGN KIT ── -->
+<div class="section">
+  <div class="section-label">UI Design Kit</div>
+  <h2 class="section-title">Komponen dan token visual</h2>
+  <p class="section-body">Design system VMS dibangun di atas sistem warna PT SMI yang sudah ada, dengan ekstensi komponen khusus untuk kebutuhan manajemen tamu.</p>
+
+  <div class="kit-section">
+    <div class="kit-label">Color Palette</div>
+    <div class="color-swatches">
+      <div class="swatch">
+        <div class="swatch-block" style="background:#0B2D5E;"></div>
+        <div class="swatch-name">Navy Primary</div>
+        <div class="swatch-hex">#0B2D5E</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#1A4580;"></div>
+        <div class="swatch-name">Navy Mid</div>
+        <div class="swatch-hex">#1A4580</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#00887A;"></div>
+        <div class="swatch-name">Teal</div>
+        <div class="swatch-hex">#00887A</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#00B09B;"></div>
+        <div class="swatch-name">Teal Light</div>
+        <div class="swatch-hex">#00B09B</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#E0F4F2;"></div>
+        <div class="swatch-name">Teal Pale</div>
+        <div class="swatch-hex">#E0F4F2</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#F5A623;"></div>
+        <div class="swatch-name">Accent Gold</div>
+        <div class="swatch-hex">#F5A623</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#F0F4F7;border:1px solid #E2E8F0;"></div>
+        <div class="swatch-name">Gray BG</div>
+        <div class="swatch-hex">#F0F4F7</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kit-section">
+    <div class="kit-label">Typography — Poppins</div>
+    <div class="type-samples">
+      <span style="font-size:28px;font-weight:700;color:#0B2D5E;line-height:1.2;">Heading 1 — Visitor Management System</span>
+      <span style="font-size:20px;font-weight:600;color:#0B2D5E;">Heading 2 — Dashboard Kunjungan Hari Ini</span>
+      <span style="font-size:15px;font-weight:400;color:#374151;">Body — Selamat datang di PT Sarana Multi Infrastruktur. Mohon isi data kunjungan Anda dengan lengkap.</span>
+      <span style="font-size:11px;font-weight:600;color:#94A3B8;letter-spacing:0.08em;text-transform:uppercase;">Caption label — Jenis Kunjungan</span>
+    </div>
+  </div>
+
+  <div class="kit-section">
+    <div class="kit-label">Buttons</div>
+    <div class="component-row">
+      <button class="c-btn-primary">Check-in Sekarang</button>
+      <button class="c-btn-secondary">Lihat Detail</button>
+      <button class="c-btn-primary" style="background:#0B2D5E;">Approve</button>
+      <button class="c-btn-secondary" style="border-color:#E53E3E;color:#E53E3E;">Tolak</button>
+    </div>
+  </div>
+
+  <div class="kit-section">
+    <div class="kit-label">Status Badges</div>
+    <div class="component-row">
+      <span class="c-badge tamu">Tamu Umum</span>
+      <span class="c-badge project">Kunjungan Proyek</span>
+      <span class="c-badge konsultan">Konsultan</span>
+      <span class="c-badge magang">Magang</span>
+      <span class="c-badge aktif">Aktif di Gedung</span>
+      <span class="c-badge proses">Menunggu Approval</span>
+      <span class="c-badge selesai">Selesai</span>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ── USABILITY TESTING ── -->
+<div class="section-alt">
+<div class="section" style="padding-top:0;padding-bottom:0;">
+  <div class="section-label">Usability Testing</div>
+  <h2 class="section-title">Validasi dengan pengguna nyata</h2>
+  <p class="section-body">Testing dilakukan dengan 8 partisipan — 3 petugas front desk, 3 admin divisi, dan 2 manajer — menggunakan skenario task-based selama 45 menit.</p>
+
+  <div class="test-grid">
+    <div class="test-metric">
+      <div class="metric-name">Task Success Rate</div>
+      <div class="metric-val">91<span class="unit">%</span></div>
+      <div class="metric-note">dari 6 skenario pengujian</div>
+    </div>
+    <div class="test-metric">
+      <div class="metric-name">Avg. Waktu Check-in</div>
+      <div class="metric-val">1<span class="unit">m 20s</span></div>
+      <div class="metric-note">sebelumnya ~8 menit manual</div>
+    </div>
+    <div class="test-metric">
+      <div class="metric-name">SUS Score</div>
+      <div class="metric-val">84<span class="unit">/100</span></div>
+      <div class="metric-note">kategori "Excellent"</div>
+    </div>
+  </div>
+
+  <div class="insight-list">
+    <div class="insight-item">
+      <div class="insight-icon good">✓</div>
+      <div class="insight-text">Semua partisipan dapat menyelesaikan registrasi tamu baru tanpa bantuan dalam waktu kurang dari 2 menit.</div>
+    </div>
+    <div class="insight-item">
+      <div class="insight-icon good">✓</div>
+      <div class="insight-text">Badge status kunjungan (Aktif / Menunggu / Selesai) sangat membantu — pengguna bisa langsung membedakan status tanpa membaca detail.</div>
+    </div>
+    <div class="insight-item">
+      <div class="insight-icon bad">!</div>
+      <div class="insight-text">2 dari 8 pengguna bingung membedakan alur "Kunjungan Proyek" vs "Tamu Umum" — butuh label yang lebih jelas di awal form.</div>
+    </div>
+    <div class="insight-item">
+      <div class="insight-icon good">✓</div>
+      <div class="insight-text">Fitur "tamu berulang" (pre-fill data konsultan yang sudah terdaftar) mendapat respons sangat positif dari seluruh petugas front desk.</div>
+    </div>
+    <div class="insight-item">
+      <div class="insight-icon bad">!</div>
+      <div class="insight-text">Notifikasi approval untuk manajer masih dianggap terlalu banyak — perlu pengaturan threshold dan frekuensi notifikasi.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ── NEXT PROJECT ── -->
+<div class="next-section">
+  <div class="next-label">Next Project</div>
+  <div class="next-title">Lihat juga: <span>TJSL — Program CSR PT SMI</span></div>
+  <a href="#" class="next-btn">View Case Study →</a>
+</div>
+
+</body>
+</html>
